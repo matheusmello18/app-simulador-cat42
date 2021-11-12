@@ -1,0 +1,251 @@
+{
+  "navBarData": {
+    "id": 1,
+    "email": "contato@painelfiscal.com.br",
+    "telefone": "Central Comercial: (11) 2389-3946",
+    "facebook": "https://www.facebook.com/painelfiscalrp",
+    "linkedin": "https://www.linkedin.com/company/painel-fiscal-consultoria-ltda",
+    "instagram": "https://www.instagram.com/painelfiscalrp/"
+  },
+  "navBarToolsData": {
+    "id": 1,
+    "images": [
+      {
+        "id":1,
+        "image":"assets/painel-fiscal-horizontal-dark.png",
+        "link": "http://painelfiscal.com.br/",
+        "alt": "Painel Fiscal"
+      },
+      {
+        "id":2,
+        "image":"assets/bolsa-nacional-icms-horizontal.png",
+        "link": "https://www.bolsanacionalicms.com.br/",
+        "alt": "Bolsa nacional icms"
+      },
+      {
+        "id":3,
+        "image":"assets/Painel-Contabil.png",
+        "link": "https://www.painelcontabil.cnt.br/",
+        "alt": "Painel Contábil"
+      }
+    ],
+    "menus":[
+      {
+        "id":1,
+        "menu":"HOME",
+        "link": "#home"
+      },
+      {
+        "id":2,
+        "menu":"SERVIÇO",
+        "link": "#servico"
+      },
+      {
+        "id":3,
+        "menu":"SOBRE",
+        "link": "#sobre"
+      },
+      {
+        "id":4,
+        "menu":"CADASTRAR-SE",
+        "link": "#cadastrar"
+      },
+      {
+        "id":5,
+        "menu":"LOGIN",
+        "link": "#login"
+      }
+    ]
+  },
+  "sectionsDatas": [
+    {
+      "id": 1,
+      "link": "home",
+      "texto": "Bem vindo",
+      "inverse": true,
+      "heroData": {
+        "id": 1,
+        "title": "Title of a longer featured blog post",
+        "description": "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+        "image": "assets/slider-01.jpg",
+        "imgText": "main image description",
+        "linkText": "Continue reading…"
+      }
+    },
+    {
+      "id": 2,
+      "link": "servico",
+      "texto": "Como funciona nosso serviço",
+      "inverse": false,
+      "comoFuncionaData": [
+        {
+          "id": 1,
+          "texto": "Configurar a sua empresa"
+        },
+        {
+          "id": 2,
+          "texto": "Importar os De/para de Código Produto"
+        },
+        {
+          "id": 3,
+          "texto": "Importar o sped do período"
+        },
+        {
+          "id": 4,
+          "texto": "Realizar todo o calculo"
+        },
+        {
+          "id": 5,
+          "texto": "Gerar o relatórios do crédito"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "link": "sobre",
+      "texto": "Sobre nós",
+      "inverse": true,
+      "sobreData":{
+        "id": 1,
+        "titulo": "Efetuamos a intermediação de crédito de ICMS",
+        "texto": "A <b>Painel Fiscal</b> possui uma plataforma completa de softwares e trabalhos BPO’s baseada nas obrigatoriedades do Fisco e na legislação vigente para proporcionar aos clientes suporte e automatização dos processos da cadeia fiscal, tributária e contábil brasileira, nas esferas Federal, Estadual e Municipal. Conte com a experiência e expertise de uma equipe especializada nas áreas Contábil e Fiscal, com amplo conhecimento tributário e com a praticidade de ter um único canal de serviços com todas as soluções fiscais e contábeis para sua empresa. Excelência no atendimento e respeito à confidencialidade."
+      }
+    },
+    {
+      "id": 4,
+      "link": "cadastrar",
+      "texto": "Cadastrar-se",
+      "inverse": false,
+      "cadastrarData": {
+        "id": 1,
+        "titulo": "Venha fazer uma simulação de sua cat42. Cadastre-se já!",
+        "form": {
+          "method":"post",
+          "action": "http://localhost/client/add"
+        },
+        "inputs": [
+          {
+            "id":1,
+            "field": "nome_contato",
+            "label": "Nome do Contato",
+            "value": "",
+            "mask": "",
+            "type": "text",
+            "requered": true
+          },
+          {
+            "id":2,
+            "field": "nome_empresa",
+            "label": "Nome da empresa",
+            "value": "",
+            "mask": "",
+            "type": "text",
+            "requered": true
+          },
+          {
+            "id":3,
+            "field": "cnpj",
+            "label": "CNPJ",
+            "value": "",
+            "mask": "cnpj",
+            "type": "text",
+            "requered": true
+          },
+          {
+            "id":4,
+            "field": "email",
+            "label": "E-mail",
+            "value": "",
+            "mask": "",
+            "type": "email",
+            "requered": true
+          },
+          {
+            "id":5,
+            "field": "telefone",
+            "label": "Telefone",
+            "value": "",
+            "mask": "tel",
+            "type": "text",
+            "requered": true
+          },
+          {
+            "id":6,
+            "field": "",
+            "label": "Cadastrar",
+            "value": "",
+            "mask": "",
+            "type": "button",
+            "requered": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "link": "caso",
+      "texto": "Casos de sucesso",
+      "inverse": true,
+      "casosSucessoData": [
+        {
+          "id": 1,
+          "nome": "Usina Cerradinho",
+          "site": "http://www.cerradinhobio.com.br/",
+          "image": "assets/CerradinhoBio.png",
+          "alt": "Logotipo da empresa Cerradinho com a descrição cerradinhobio"
+        },
+        {
+          "id": 2,
+          "nome": "Usina Santa Adélia",
+          "site": "https://site.usinasantaadelia.com.br/",
+          "image": "assets/UsinaSantaAdelia.png",
+          "alt": "Logotipo da empresa Usina Santa Adélia com a descrição Usina Santa Adélia"
+        },{
+          "id": 3,
+          "nome": "Usina Delta",
+          "site": "http://www.deltasucroenergia.com.br/frontend/",
+          "image": "assets/Delta.png",
+          "alt": "Logotipo da empresa Delta com a descrição Delta"
+        },
+        {
+          "id": 4,
+          "nome": "Usina Jalles Machado",
+          "site": "https://www.jallesmachado.com/pt/home/",
+          "image": "assets/JallesMachado.png",
+          "alt": "Logotipo da empresa Jalles Machado com a descrição Jalles Machado"
+        },
+        {
+          "id": 5,
+          "nome": "Usina Morlan",
+          "site": "https://www.morlan.com.br/",
+          "image": "assets/Morlan.png",
+          "alt": "Logotipo da empresa Morlan com a descrição Morlan"
+        },
+        {
+          "id": 6,
+          "nome": "Usina Frigorífico Frigo Estrela",
+          "site": "http://www.frigoestrela.com.br/",
+          "image": "assets/FrigoEstrela.png",
+          "alt": "Logotipo da empresa Frigorífico Frigo Estrela com a descrição Frigorífico Frigo Estrela"
+        }
+      ]
+    }
+  ],
+  "footData": {
+    "id":1,
+    "quemSomos":"A <strong>PAINEL FISCAL</strong> é uma empresa de consultoria de gestão e tecnologia de sistemas de informação, especializada nas áreas Contábil e Fiscal e com ampla expertise tributária.",
+    "facebook":"https://www.facebook.com/painelfiscalrp",
+    "linkedin":"https://www.linkedin.com/company/painel-fiscal-consultoria-ltda",
+    "instagram":"https://www.instagram.com/painelfiscalrp/",
+    "centralOperacao": {
+      "id":1,
+      "endereco":"Av. Portugal, 1740, 6º Andar, Sala 64 - Ribeirão Preto/SP",
+      "telefones": "(16) 3916-2426 | (11) 3014–2199"
+    },
+    "centralComercial": {
+      "id":1,
+      "endereco":"Rua Tuiutí, 2530, 8 andar, conjunto 81, Tatuapé - São Paulo – SP",
+      "telefones": "(11) 2389-3946"
+    }
+  }
+}
