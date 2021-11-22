@@ -72,7 +72,7 @@ const CadastroCliente = (props) => {
 
   const handleClick = (event) => {
     if (validate()){
-      Axios.post('http://localhost:8081/api/v1/cliente/add', {
+      Axios.post('http://192.168.1.188:8081/api/v1/cliente/add', { // trocar pelo ip externo ou nome do site
       //Axios.post('https://matilab.com.br/api/v1/cliente/index.php', {
         nome_contato: values.nome_contato,
         nome_empresa: values.nome_empresa,
@@ -86,8 +86,9 @@ const CadastroCliente = (props) => {
         //setValues({ ...{}});
       })
       .catch(function (error) {
-        alert("Falha na transmissão");
+        console.log('matheus');
         console.log(error);
+        alert("Falha na transmissão");
       });
 
       
