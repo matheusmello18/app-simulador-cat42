@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useReducer } from "react";
 import PropTypes from 'prop-types';
 import Loader from 'components/atoms/Loader';
+import MD5 from "crypto-js/md5";
 
 import axios from 'utils/axios';
 
@@ -97,22 +98,29 @@ const accountReducer = (state, action) => {
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(accountReducer, initialState);
 
-  const login = async (email, password) => {
-    const response = await axios.post('/api/user/login', { email, password });
-    const { user } = response.data;
-    setCookie("email", email, 1); // 1 dia para expirar
-    dispatch({
-        type: LOGIN,
-        payload: {
-            user
-        }
-    });
+  const login = async (usuario, password) => {
+    const senha = MD5(usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
+    console.log(usuario, password, senha);
+    const response = await axios.post('/api/user/login', { usuario: usuario, senha: senha });
+    const { success, user } = response.data;
+    console.log(response.data);
+    if (success === "true"){
+      setCookie("usuario", usuario, 1); // 1 dia para expirar
+      dispatch({
+          type: LOGIN,
+          payload: {
+              user
+          }
+      });
+    } else {
+      console.log('usuario e senha invalido');
+    }
   }
 
   const signIn = async (name, email, password) => {
       const response = await axios.post('/api/user/store', {name, email, password });
       const { user } = response.data;
-      setCookie("email", email, 1); // 1 dia para expirar
+      setCookie("usuario", email, 1); // 1 dia para expirar
       dispatch({
           type: LOGIN,
           payload: {
@@ -134,7 +142,7 @@ export const UserProvider = ({ children }) => {
     const init = async () => {
       try {
         if (checkCookie("email")) {
-            const response = await axios.post('/api/user/account', {email : getCookie("email")});
+            const response = await axios.post('/api/user/account', {usuario : getCookie("usuario")});
             const { user } = response.data;
             dispatch({
                 type: ACCOUNT_INITIALIZE,
@@ -165,7 +173,7 @@ export const UserProvider = ({ children }) => {
     };
 
     init();
-}, []);
+  }, []);
 
   if (!state.isInitialized) {
     return <Loader />;

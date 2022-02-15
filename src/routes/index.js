@@ -1,6 +1,9 @@
 import React from 'react';
 import { useRoutes } from "react-router-dom";
 
+import ValidaConvidado from 'utils/route-private/ValidaConvidado';
+import ValidaAutenticacao from 'utils/route-private/ValidaAutenticacao';
+
 import Home from "routes/home";
 import Login from "routes/login";
 import Dashboard from "routes/dashboard";
@@ -14,8 +17,22 @@ const AppRoutes = () => {
   return useRoutes(
     [
       {path:"/", element: <Home />},
-      {path:"/login", element: <Login />},
-      {path:"/dashboard", element: <Dashboard />},
+      {
+        path:"/login", 
+        element: (
+          <ValidaConvidado>
+            <Login />
+          </ValidaConvidado>
+        )
+      },
+      {
+        path:"/dashboard", 
+        element: (
+          <ValidaAutenticacao>
+            <Dashboard />
+          </ValidaAutenticacao>
+         )
+      },
       {path:"*", element: <Error404 />},
     ]
   );

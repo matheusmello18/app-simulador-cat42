@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {Link as LinkTo, Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
 import useAuth from 'hooks/useAuth';
 
 export default function FormLogin() {
@@ -21,12 +21,8 @@ export default function FormLogin() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
 
-    login(data.get('email'), data.get('password'));
+    login(data.get('usuario'), data.get('password'));
     
   };
 
@@ -54,11 +50,12 @@ export default function FormLogin() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              id="text"
+              label="Usuário"
+              name="usuario"
+              autoComplete="text"
               autoFocus
+              inputProps={{ style: { textTransform: "uppercase" } }}
             />
             <TextField
               margin="normal"
