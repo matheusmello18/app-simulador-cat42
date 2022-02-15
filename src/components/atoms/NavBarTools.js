@@ -107,19 +107,21 @@ const NavBarTools = (props) => {
       setState((prevState) => ({ ...prevState, drawerOpen: false }));
 
     const handleGoSection = async (id) => {
-      const sleep = async (ms) => await new Promise(resolve => setTimeout(resolve, ms))
+      if (id.startsWith("#")){
+        const sleep = async (ms) => await new Promise(resolve => setTimeout(resolve, ms))
 
-      handleDrawerClose();
-      
-      await sleep(100);
+        handleDrawerClose();
+        
+        await sleep(100);
 
-      const anchor = document.querySelector(id);
+        const anchor = document.querySelector(id);
 
-      if (anchor) {
-        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (anchor) {
+          anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
-      
     }
+
     return (
       <>
         <Box flexGrow="1" display="flex" flexWrap="nowrap" id="mobileViewImageTrue">
@@ -174,10 +176,12 @@ const NavBarTools = (props) => {
 
   const displayDesktop = () => {
     const doClick = (id) => {
-      const anchor = document.querySelector(id);
-      
-      if (anchor) {
-        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (id.startsWith("#")){
+        const anchor = document.querySelector(id);
+        
+        if (anchor) {
+          anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     };
 
@@ -196,7 +200,21 @@ const NavBarTools = (props) => {
         <Box display="flex" flexWrap="nowrap" id="mobileViewFalse">
           {navBarToolsData.menus.map((item) => (
             <Box key={item.id}>
-              <Button onClick={()=>{ doClick(item.link) }} style={{fontWeight:"600", fontSize:"0.94rem" }}>{item.menu}</Button>
+              {item.link.startsWith("#") 
+                ? <Button onClick={()=>{ doClick(item.link) }} style={{fontWeight:"600", fontSize:"0.94rem" }}>{item.menu}</Button> 
+                : <Link
+                  {...{
+                    component: RouterLink,
+                    to: item.link,
+                    color: "inherit",
+                    style: { textDecoration: "none"},
+                    onClick: () => {doClick(item.link)},
+                  }}
+                >
+                  <MenuItem style={{ textDecoration: "none", fontWeight:"600", fontSize:"0.94rem" }}>{item.menu}</MenuItem>
+                </Link>
+              }
+              
             </Box>
           ))}
         </Box>

@@ -8,5 +8,7 @@ import SobreNos from "components/molecules/SobreNos";
 import Portifolio from "components/molecules/Portifolio";
 import CadastroCliente from "components/molecules/CadastroCliente";
 import FooterMain from "components/molecules/FooterMain";
+import FormLogin from "components/molecules/FormLogin";
+import BarApp from "components/atoms/dashboard/BarApp";
 
-export { NavBarTools, NavBar, Hero, Button, Section, ComoFunciona, SobreNos, Portifolio, CadastroCliente, FooterMain };
+export { NavBarTools, NavBar, Hero, Button, Section, ComoFunciona, SobreNos, Portifolio, CadastroCliente, FooterMain, FormLogin, BarApp };
