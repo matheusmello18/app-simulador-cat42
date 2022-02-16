@@ -112,8 +112,9 @@ export const UserProvider = ({ children }) => {
               user
           }
       });
+      return true;
     } else {
-      console.log('usuario e senha invalido');
+      return false;
     }
   }
 
@@ -141,24 +142,24 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        if (checkCookie("email")) {
-            const response = await axios.post('/api/user/account', {usuario : getCookie("usuario")});
-            const { user } = response.data;
-            dispatch({
-                type: ACCOUNT_INITIALIZE,
-                payload: {
-                    isLoggedIn: true,
-                    user
-                }
-            });
+        if (checkCookie("usuario")) {
+          const response = await axios.post('/api/user/account', {usuario : getCookie("usuario")});
+          const { user } = response.data;
+          dispatch({
+              type: ACCOUNT_INITIALIZE,
+              payload: {
+                  isLoggedIn: true,
+                  user
+              }
+          });
         } else {
-            dispatch({
-                type: ACCOUNT_INITIALIZE,
-                payload: {
-                    isLoggedIn: false,
-                    user: null
-                }
-            });
+          dispatch({
+              type: ACCOUNT_INITIALIZE,
+              payload: {
+                  isLoggedIn: false,
+                  user: null
+              }
+          });
         }
       } catch (err) {
         console.error(err);

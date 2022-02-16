@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Button, AppBar, Box, Toolbar, Typography, IconButton, MenuItem, Menu} from '@mui/material'; /*Switch, FormControlLabel, FormGroup, */
+import {AppBar, Box, Toolbar, Typography, IconButton, MenuItem, Menu} from '@mui/material'; /*Switch, FormControlLabel, FormGroup, */
 import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText} from '@mui/material';
 
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -9,7 +9,6 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import useAuth from "hooks/useAuth";
-import MD5 from "crypto-js/md5";
 
 export default function BarApp() {
   const { logout } = useAuth();
@@ -23,12 +22,6 @@ export default function BarApp() {
     bottom: false,
     right: false,
   });
-
-  const handleMD5 = (event) => {
-    console.log('clicou')
-    const pass = "MATHEUS123456";
-    console.log(MD5(pass).toString().slice(0, 10).toLowerCase());
-  }
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -140,16 +133,6 @@ export default function BarApp() {
           </List>
         </Box>
       </Drawer>
-
-      <Button
-              type="button"
-              onClick={handleMD5}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              md5
-            </Button>
     </>
   );
 }

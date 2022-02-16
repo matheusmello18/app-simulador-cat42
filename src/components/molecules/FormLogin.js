@@ -14,17 +14,37 @@ import Container from '@mui/material/Container';
 import {Link as RouterLink} from "react-router-dom";
 import useAuth from 'hooks/useAuth';
 
+import AlertDialogSlide from "components/atoms/AlertDialogSlide";
+
 export default function FormLogin() {
   const { login } = useAuth();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
 
-    login(data.get('usuario'), data.get('password'));
-    
+    const isLogged = await login(data.get('usuario'), data.get('password'));
+    if (!isLogged){
+      setOpenModal(true);
+      setTituloModal("Falha ao realizar o loginho.");
+      setSubtituloModal("Por favor, verifique o usuário e senha se estão corretos");
+    }
   };
+
+  /**
+   * variaveis relacionados ao modal
+   */
+  const [openModal, setOpenModal] = React.useState(false);
+  const [tituloModal, setTituloModal] = React.useState('');
+  const [subtituloModal, setSubtituloModal] = React.useState('');
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  }
+
+  /**
+   * Fim
+   */
 
   return (
     <>
@@ -79,6 +99,7 @@ export default function FormLogin() {
             >
               Entrar
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -94,6 +115,13 @@ export default function FormLogin() {
           </Box>
         </Box>
       </Container>
+
+      <AlertDialogSlide 
+        onClose={handleCloseModal}
+        titulo={tituloModal}
+        subtitulo={subtituloModal}
+        open={openModal}
+      />
     </>
   );
 }

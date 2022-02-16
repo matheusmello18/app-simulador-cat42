@@ -10,5 +10,6 @@ import CadastroCliente from "components/molecules/CadastroCliente";
 import FooterMain from "components/molecules/FooterMain";
 import FormLogin from "components/molecules/FormLogin";
 import BarApp from "components/atoms/dashboard/BarApp";
+import AlertDialogSlide from "components/atoms/AlertDialogSlide";
 
-export { NavBarTools, NavBar, Hero, Button, Section, ComoFunciona, SobreNos, Portifolio, CadastroCliente, FooterMain, FormLogin, BarApp };
+export { NavBarTools, NavBar, Hero, Button, Section, ComoFunciona, SobreNos, Portifolio, CadastroCliente, FooterMain, FormLogin, BarApp, AlertDialogSlide };
