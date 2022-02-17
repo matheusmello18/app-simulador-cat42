@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { Avatar, Button, Box, Typography, Container, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Avatar, Button, Box, Typography, Container, CssBaseline, TextField, Link, Grid } from '@mui/material';
+import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import {Link as RouterLink} from "react-router-dom";
 import useAuth from 'hooks/useAuth';
 
 import AlertDialogSlide from "components/atoms/AlertDialogSlide";
 
-export default function FormLogin() {
-
-  const { login } = useAuth();
+const FormForget = () => {
+  const { forgotPassword } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
 
-    const isLogged = await login(data.get('email'), data.get('password'));
+    const isLogged = await forgotPassword(data.get('email'));
     if (!isLogged){
       setOpenModal(true);
       setTituloModal("Falha ao realizar o loginho.");
@@ -33,10 +32,6 @@ export default function FormLogin() {
     setOpenModal(false);
   }
 
-  /**
-   * Fim
-   */
-
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -51,10 +46,10 @@ export default function FormLogin() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
+            <LockResetOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Entrar
+            Recupere sua Senha?
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -62,25 +57,11 @@ export default function FormLogin() {
               required
               fullWidth
               id="text"
-              label="E-mail"
-              name="email"
-              autoComplete="email"
+              label="Usuário"
+              name="usuario"
+              autoComplete="text"
               autoFocus
               inputProps={{ style: { textTransform: "uppercase" } }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Lembrar-me"
             />
             <Button
               type="submit"
@@ -88,18 +69,13 @@ export default function FormLogin() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Entrar
+              Recuperar a senha
             </Button>
 
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Esqueceu a Senha?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link component={RouterLink} to="/#cadastrar" variant="body2">
-                  {"Não tem conta? Cadastrar-se"}
+                <Link component={RouterLink} to="/login" href="#" variant="caption">
+                  Voltar ao login
                 </Link>
               </Grid>
             </Grid>
@@ -115,4 +91,10 @@ export default function FormLogin() {
       />
     </>
   );
-}
+};
+
+FormForget.defaultProps = {}
+
+FormForget.propTypes = {}
+
+export default FormForget;

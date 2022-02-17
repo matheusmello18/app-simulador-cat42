@@ -98,14 +98,13 @@ const accountReducer = (state, action) => {
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(accountReducer, initialState);
 
-  const login = async (usuario, password) => {
-    const senha = MD5(usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
-    console.log(usuario, password, senha);
-    const response = await axios.post('/api/user/login', { usuario: usuario, senha: senha });
+  const login = async (email, password) => {
+    const senha = MD5(password).toString();
+    const response = await axios.post('/api/user/login', { email: email, senha: senha });
     const { success, user } = response.data;
     console.log(response.data);
     if (success === "true"){
-      setCookie("usuario", usuario, 1); // 1 dia para expirar
+      setCookie("email", email, 1); // 1 dia para expirar
       dispatch({
           type: LOGIN,
           payload: {
@@ -121,7 +120,7 @@ export const UserProvider = ({ children }) => {
   const signIn = async (name, email, password) => {
       const response = await axios.post('/api/user/store', {name, email, password });
       const { user } = response.data;
-      setCookie("usuario", email, 1); // 1 dia para expirar
+      setCookie("email", email, 1); // 1 dia para expirar
       dispatch({
           type: LOGIN,
           payload: {
@@ -130,8 +129,14 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  const forgotPassword = async (password) => {
+  const forgotPassword = async (email) => {
+    const response = await axios.post('/api/user/forget', {email: email });
+    const { success } = response.data;
 
+    if (success === "true")
+      return true;
+    else 
+      return false;
   };
 
   const logout = () => {
@@ -142,8 +147,8 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        if (checkCookie("usuario")) {
-          const response = await axios.post('/api/user/account', {usuario : getCookie("usuario")});
+        if (checkCookie("email")) {
+          const response = await axios.post('/api/user/account', {email : getCookie("email")});
           const { user } = response.data;
           dispatch({
               type: ACCOUNT_INITIALIZE,

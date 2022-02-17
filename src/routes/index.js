@@ -6,6 +6,7 @@ import ValidaAutenticacao from 'utils/route-private/ValidaAutenticacao';
 
 import Home from "routes/home";
 import Login from "routes/login";
+import Forget from "routes/forget";
 import Dashboard from "routes/dashboard";
 import Error404 from "routes/error404";
 
@@ -33,6 +34,7 @@ const AppRoutes = () => {
           </ValidaAutenticacao>
          )
       },
+      {path:"/forget", element: <Forget />},
       {path:"*", element: <Error404 />},
     ]
   );
