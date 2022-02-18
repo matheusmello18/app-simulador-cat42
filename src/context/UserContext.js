@@ -54,8 +54,9 @@ function checkCookie(cname) {
 const UserContext = createContext({
   ...initialState,
   login: () => Promise.resolve(),
-  signIn: () => Promise.resolve(),
+  recovery: () => Promise.resolve(),
   forgotPassword: () => Promise.resolve(),
+  buscarPorHash: () => Promise.resolver(),
   logout: () => {}
 });
 
@@ -102,7 +103,7 @@ export const UserProvider = ({ children }) => {
     const senha = MD5(password).toString();
     const response = await axios.post('/api/user/login', { email: email, senha: senha });
     const { success, user } = response.data;
-    console.log(response.data);
+
     if (success === "true"){
       setCookie("email", email, 1); // 1 dia para expirar
       dispatch({
@@ -112,22 +113,28 @@ export const UserProvider = ({ children }) => {
           }
       });
       return true;
-    } else {
-      return false;
     }
+    
+    return false;    
   }
 
-  const signIn = async (name, email, password) => {
-      const response = await axios.post('/api/user/store', {name, email, password });
-      const { user } = response.data;
+  const recovery = async (id, email, nm_usuario, password) => {
+    const senha = MD5(nm_usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
+    console.log(nm_usuario.toUpperCase(), password, senha);
+    const senhaWeb = MD5(password).toString();
+    const response = await axios.post('/api/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
+    const { success, user } = response.data;
+    if (success === "true"){
       setCookie("email", email, 1); // 1 dia para expirar
-      dispatch({
-          type: LOGIN,
-          payload: {
-              user
-          }
-      });
+    } 
+    return { success, user };
+    
   };
+
+  const buscarPorHash = async (hash) => {
+    const response = await axios.post('/api/user/hash', {hash:hash});
+    return response.data;
+};
 
   const forgotPassword = async (email) => {
     const response = await axios.post('/api/user/forget', {email: email });
@@ -135,8 +142,8 @@ export const UserProvider = ({ children }) => {
 
     if (success === "true")
       return true;
-    else 
-      return false;
+    
+    return false;
   };
 
   const logout = () => {
@@ -185,7 +192,7 @@ export const UserProvider = ({ children }) => {
     return <Loader />;
   }
 
-  return <UserContext.Provider value={{ ...state, login, logout }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ ...state, login, logout, forgotPassword, recovery, buscarPorHash }}>{children}</UserContext.Provider>;
 
 };
 

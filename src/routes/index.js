@@ -7,13 +7,10 @@ import ValidaAutenticacao from 'utils/route-private/ValidaAutenticacao';
 import Home from "routes/home";
 import Login from "routes/login";
 import Forget from "routes/forget";
+import Recovery from "routes/recovery";
 import Dashboard from "routes/dashboard";
 import Error404 from "routes/error404";
 
-/*
-  <Route path="/Sobre" element={<About />} />
-  <Route path="/Servicos/:slang" element={<ProductDetail />} />
-*/
 const AppRoutes = () => {
   return useRoutes(
     [
@@ -35,6 +32,7 @@ const AppRoutes = () => {
          )
       },
       {path:"/forget", element: <Forget />},
+      {path:"/recovery/:hash", element: <Recovery />},
       {path:"*", element: <Error404 />},
     ]
   );

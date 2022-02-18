@@ -128,7 +128,7 @@ const NavBarTools = (props) => {
           {navBarToolsData.images.map((item) => (
             <Box key={item.id}>
               <a href={item.link} target="_blank" rel="noopener noreferrer">
-                <img src={item.image} className={classes.image} alt={item.alt} />
+                <img src={process.env.PUBLIC_URL + "/" + item.image} className={classes.image} alt={item.alt} />
               </a>
             </Box>
           ))}
@@ -191,7 +191,7 @@ const NavBarTools = (props) => {
           {navBarToolsData.images.map((item) => (
             <Box key={item.id}>
               <a href={item.link} target="_blank" rel="noopener noreferrer">
-                <img src={item.image} className={classes.image} alt={item.alt} />
+                <img src={process.env.PUBLIC_URL + "/" + item.image} className={classes.image} alt={item.alt} />
               </a>
             </Box>
           ))}

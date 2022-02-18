@@ -93,7 +93,7 @@ export default function FormLogin() {
 
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to="/forget" variant="body2">
                   Esqueceu a Senha?
                 </Link>
               </Grid>

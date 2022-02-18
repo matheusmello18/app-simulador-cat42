@@ -1,25 +1,25 @@
 import React from "react";
-import { NavBarTools, NavBar, FooterMain, FormLogin } from "components";
+
+import { NavBarTools, NavBar, FooterMain, FormRecovery } from "components";
 import { homeType } from "model";
 
-const Login = ({homeData}) => {
-  
+const Recovery = ({homeData}) => {
   return (
     <>
       <NavBar navBarData={homeData.navBarData}></NavBar>
       <NavBarTools navBarToolsData={homeData.navBarToolsData} />
-        <FormLogin></FormLogin>
+        <FormRecovery></FormRecovery>
       <FooterMain footData={homeData.footData}></FooterMain>
     </>
   );
 };
 
-Login.defaultProps = {
+Recovery.defaultProps = {
   homeData: {},
-};
+}
 
-Login.propTypes = {
+Recovery.propTypes = {
   homeData: homeType.isRequired,
 }
 
-export default Login;
+export default Recovery;

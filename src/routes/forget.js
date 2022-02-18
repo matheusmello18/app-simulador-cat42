@@ -1,14 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import FormForget from "components/pages/Forget"
+import data from "model/builders/fixtures/home.json";
 
 const Forget = () => {
-  <FormForget></FormForget>
+  return (
+    <FormForget homeData={data}></FormForget>
+  )
 };
-
-Forget.defaultProps = {}
-
-Forget.propTypes = {}
 
 export default Forget;

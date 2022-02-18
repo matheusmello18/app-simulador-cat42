@@ -15,10 +15,16 @@ const FormForget = () => {
     // eslint-disable-next-line no-console
 
     const isLogged = await forgotPassword(data.get('email'));
-    if (!isLogged){
+    if (isLogged){
       setOpenModal(true);
-      setTituloModal("Falha ao realizar o loginho.");
-      setSubtituloModal("Por favor, verifique o usuário e senha se estão corretos");
+      setTituloModal("Solicitação realizada com sucesso.");
+      setSubtituloModal("Encaminhamos um e-mail com o link de acesso de recuperação de senha.");
+      var form = document.getElementById("formForget");
+      form.reset();
+    } else {
+      setOpenModal(true);
+      setTituloModal("Falha ao solicitar a recuperação de senha.");
+      setSubtituloModal("Não encontramos seu e-mail cadastrado.");
     }
   };
 
@@ -51,15 +57,15 @@ const FormForget = () => {
           <Typography component="h1" variant="h5">
             Recupere sua Senha?
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} id="formForget" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="text"
-              label="Usuário"
-              name="usuario"
-              autoComplete="text"
+              id="email"
+              label="E-mail"
+              name="email"
+              autoComplete="email"
               autoFocus
               inputProps={{ style: { textTransform: "uppercase" } }}
             />
@@ -92,9 +98,5 @@ const FormForget = () => {
     </>
   );
 };
-
-FormForget.defaultProps = {}
-
-FormForget.propTypes = {}
 
 export default FormForget;

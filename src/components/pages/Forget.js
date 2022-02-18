@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { NavBarTools, NavBar, FooterMain, FormForget } from "components";
 import { homeType } from "model";
