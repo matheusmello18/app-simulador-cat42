@@ -9,7 +9,9 @@ import sectionType from "./types/sectionType";
 import footType from "./types/footType";
 import metaType from "./types/metaType";
 import homeType from "./types/homeType";
+import menusType from "./types/menusType";
+import userType from "./types/userType";
 
 export { HeroType, NavBarType, NavBarToolsType, comoFuncionaType, 
   sobreType, cadastrarType, casoSucessoType, sectionType, footType, 
-  metaType, homeType };
+  metaType, homeType, menusType, userType };

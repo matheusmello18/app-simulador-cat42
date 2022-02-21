@@ -3,10 +3,11 @@ import { addDecorator, addParameters } from "@storybook/react";
 import { select } from "@storybook/addon-knobs";
 import { MemoryRouter as Router } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider, createMuiTheme } from "@material-ui/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import { GlobalStyle } from '../src/components/styles/GlobalStyle';
 
+let theme = createTheme();
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -66,7 +67,7 @@ addDecorator((storyFn) => (
   <>
     <CssBaseline></CssBaseline>
     <Router>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         {storyFn()}
       </ThemeProvider>

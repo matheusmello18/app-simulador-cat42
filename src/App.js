@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider, createTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import GlobalStyle from 'components/styles/GlobalStyle';
 

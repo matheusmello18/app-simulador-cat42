@@ -1,16 +1,25 @@
 import React from "react";
-import BarApp from "components/atoms/dashboard/BarApp";
+import {BarApp} from "components";
+import { menusType, userType } from "model";
 
-const Dashboard = () => {
+const Dashboard = ({menuData, user}) => {
+  
   return (
     <>
-      <BarApp></BarApp>
+      {user !== null &&
+        <BarApp menuData={menuData} user={user}></BarApp>}
     </>
   );
 };
 
-Dashboard.defaultProps = {}
+Dashboard.defaultProps = {
+  menuData: {},
+  user: {}
+}
 
-Dashboard.propTypes = {}
+Dashboard.propTypes = {
+  menuData: menusType.isRequired,
+  user: userType.isRequired
+}
 
 export default Dashboard; 

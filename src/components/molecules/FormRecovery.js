@@ -123,7 +123,6 @@ const FormRecovery = () => {
               autoComplete="password"
               onChange={handleChangeReSenha}
               value={resenha}
-              autoFocus
             />
             <FormHelperText id="component-helper-text">
               {senhaIguais}

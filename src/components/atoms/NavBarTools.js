@@ -4,7 +4,7 @@ import { Button, AppBar, Toolbar, Container, IconButton, Fab, Zoom, Drawer, Box,
 import MenuIcon from "@material-ui/icons/Menu";
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { Link as RouterLink } from "react-router-dom";
 
 import { NavBarToolsType } from "model";

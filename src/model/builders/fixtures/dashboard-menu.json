@@ -1,0 +1,22 @@
+{
+  "menus": [
+    {
+      "titulo": "Dados pessoais",
+      "disabled": false,
+      "submenus": [
+        {"text":"Home", "icone": "InBoxIcon", "to": "/", "disabled": false},
+        {"text":"Email", "icone": "MailIcon", "to": "/mail" , "disabled": false},
+        {"text":"Usuário", "icone": "AccountTreeIcon", "to": "/conta", "disabled": false}
+      ]
+    },
+    {
+      "titulo": "Importações",
+      "disabled": false,
+      "submenus": [
+        {"text":"Produtos", "icone": "InBoxIcon", "to": "/produts", "disabled": false},
+        {"text":"Notas", "icone": "MailIcon", "to": "/notas", "disabled": false}
+      ]
+    }
+  ]
+  
+}

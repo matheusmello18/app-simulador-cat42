@@ -1,16 +1,34 @@
 import * as React from 'react';
 
 import {AppBar, Box, Toolbar, Typography, IconButton, MenuItem, Menu} from '@mui/material'; /*Switch, FormControlLabel, FormGroup, */
-import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText} from '@mui/material';
+import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, ListSubheader, Avatar} from '@mui/material';
+import {Link as RouterLink} from "react-router-dom";
+import stringSimilarity from 'string-similarity'
 
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { menusType } from "model";
+
+import * as icons from '@mui/icons-material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
+import Logout from '@mui/icons-material/Logout';
 
 import useAuth from "hooks/useAuth";
 
-export default function BarApp() {
+export default function BarApp({menuData, user}) {
+
+  console.log(menuData, user);
+
+  function criaIcons(word) {
+    const iconsNames = Object.keys(icons)
+
+    var matches = stringSimilarity.findBestMatch(word, iconsNames)
+    const bestMathch = matches.bestMatch.target
+    const Icon = icons[bestMathch]
+    return Icon
+  }
+
+  console.log(user);
+
   const { logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -44,6 +62,8 @@ export default function BarApp() {
     await logout();
   }
 
+  let Icones;
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -60,7 +80,7 @@ export default function BarApp() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Photos
+              {user.NM_COMPLETO}
             </Typography>
             
               <div>
@@ -77,21 +97,48 @@ export default function BarApp() {
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
                   keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
+                  PaperProps={{
+                    elevation: 0,
+                    sx: {
+                      overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      mt: 1.5,
+                      '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                      },
+                    },
+                  }}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Avatar /> Minha conta
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </div>
             
@@ -110,29 +157,55 @@ export default function BarApp() {
           onClick={toggleDrawer(anchor, false)}
           onKeyDown={toggleDrawer(anchor, false)}
         >
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          <Typography variant="h6" gutterBottom component="div" mt={2} align="center">
+            Menu Prinicpal
+          </Typography>
+
           <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+
+          {menuData.menus.map((menu, index) => {
+            if (!menu.disabled){
+              return (
+                <React.Fragment key={index}>
+                  <List dense={true}>
+                    <ListSubheader component="div" inset>
+                      {menu.titulo}
+                    </ListSubheader>
+                    {menu.submenus.map((obj, index2) => {
+                      Icones = criaIcons(obj.icone);
+                      if (!obj.disabled){
+                        return (
+                          <ListItem button key={index2} component={RouterLink} to={obj.text}>
+                            <ListItemIcon>
+                              <Icones color="primary" />
+                            </ListItemIcon>
+                            <ListItemText primary={obj.text} />
+                          </ListItem>
+                        )
+                      } else {
+                        return (<React.Fragment key={index2}></React.Fragment>)
+                      }
+                    })}
+                  </List>
+                  
+                  <Divider key={index} />    
+                </React.Fragment>
+              );
+            } else {
+              return (<React.Fragment key={index}></React.Fragment>)
+            }
+          })}
+          
         </Box>
       </Drawer>
     </>
   );
+}
+
+BarApp.defaultProps = {
+  menuData: {}
+}
+
+BarApp.propTypes = {
+  menuData: menusType.isRequired
 }

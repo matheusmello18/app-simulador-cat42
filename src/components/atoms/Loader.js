@@ -1,7 +1,7 @@
 import React from 'react';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 // style constant

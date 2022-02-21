@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Card, CardActionArea, CardContent, CardMedia, Button, Typography} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 
 import Section from "components/atoms/Section";
