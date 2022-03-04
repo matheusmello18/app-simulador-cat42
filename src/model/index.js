@@ -11,7 +11,8 @@ import metaType from "./types/metaType";
 import homeType from "./types/homeType";
 import menusType from "./types/menusType";
 import userType from "./types/userType";
+import allEtapaType from "./types/etapaType";
 
 export { HeroType, NavBarType, NavBarToolsType, comoFuncionaType, 
   sobreType, cadastrarType, casoSucessoType, sectionType, footType, 
-  metaType, homeType, menusType, userType };
+  metaType, homeType, menusType, userType, allEtapaType };

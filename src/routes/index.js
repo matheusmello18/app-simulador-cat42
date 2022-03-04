@@ -10,6 +10,7 @@ import Forget from "routes/forget";
 import Recovery from "routes/recovery";
 import Dashboard from "routes/dashboard";
 import Error404 from "routes/error404";
+import Etapa from "routes/etapa";
 
 const AppRoutes = () => {
   return useRoutes(
@@ -29,7 +30,13 @@ const AppRoutes = () => {
           <ValidaAutenticacao>
             <Dashboard />
           </ValidaAutenticacao>
-         )
+         ),
+         children: [
+          {
+              path: '/dashboard/etapa',
+              element: <Etapa />
+          }
+        ]
       },
       {path:"/forget", element: <Forget />},
       {path:"/recovery/:hash", element: <Recovery />},

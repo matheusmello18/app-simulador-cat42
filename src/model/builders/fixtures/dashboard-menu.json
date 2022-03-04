@@ -4,17 +4,17 @@
       "titulo": "Dados pessoais",
       "disabled": false,
       "submenus": [
-        {"text":"Home", "icone": "InBoxIcon", "to": "/", "disabled": false},
-        {"text":"Email", "icone": "MailIcon", "to": "/mail" , "disabled": false},
-        {"text":"Usuário", "icone": "AccountTreeIcon", "to": "/conta", "disabled": false}
+        {"text":"Home", "icone": "InBoxIcon", "to": "/dashboard", "disabled": false},
+        {"text":"Email", "icone": "MailIcon", "to": "/dashboard/mail" , "disabled": false},
+        {"text":"Usuário", "icone": "AccountTreeIcon", "to": "/dashboard/contato", "disabled": false}
       ]
     },
     {
       "titulo": "Importações",
       "disabled": false,
       "submenus": [
-        {"text":"Produtos", "icone": "InBoxIcon", "to": "/produts", "disabled": false},
-        {"text":"Notas", "icone": "MailIcon", "to": "/notas", "disabled": false}
+        {"text":"Etapa", "icone": "InBoxIcon", "to": "/dashboard/etapa", "disabled": false},
+        {"text":"Notas", "icone": "MailIcon", "to": "/dashboard/notas", "disabled": false}
       ]
     }
   ]

@@ -101,7 +101,7 @@ export const UserProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const senha = MD5(password).toString();
-    const response = await axios.post('/api/user/login', { email: email, senha: senha });
+    const response = await axios.post('/api/v1/user/login', { email: email, senha: senha });
     const { success, user } = response.data;
 
     if (success === "true"){
@@ -122,7 +122,7 @@ export const UserProvider = ({ children }) => {
     const senha = MD5(nm_usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
     console.log(nm_usuario.toUpperCase(), password, senha);
     const senhaWeb = MD5(password).toString();
-    const response = await axios.post('/api/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
+    const response = await axios.post('/api/v1/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
     const { success, user } = response.data;
     if (success === "true"){
       setCookie("email", email, 1); // 1 dia para expirar
@@ -132,12 +132,12 @@ export const UserProvider = ({ children }) => {
   };
 
   const buscarPorHash = async (hash) => {
-    const response = await axios.post('/api/user/hash', {hash:hash});
+    const response = await axios.post('/api/v1/user/hash', {hash:hash});
     return response.data;
 };
 
   const forgotPassword = async (email) => {
-    const response = await axios.post('/api/user/forget', {email: email });
+    const response = await axios.post('/api/v1/user/forget', {email: email });
     const { success } = response.data;
 
     if (success === "true")
@@ -155,7 +155,7 @@ export const UserProvider = ({ children }) => {
     const init = async () => {
       try {
         if (checkCookie("email")) {
-          const response = await axios.post('/api/user/account', {email : getCookie("email")});
+          const response = await axios.post('/api/v1/user/account', {email : getCookie("email")});
           const { user } = response.data;
           dispatch({
               type: ACCOUNT_INITIALIZE,

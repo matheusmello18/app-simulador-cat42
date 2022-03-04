@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import {AppBar, Box, Toolbar, Typography, IconButton, MenuItem, Menu} from '@mui/material'; /*Switch, FormControlLabel, FormGroup, */
 import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, ListSubheader, Avatar} from '@mui/material';
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, Outlet} from "react-router-dom";
+
 import stringSimilarity from 'string-similarity'
 
 import { menusType } from "model";
@@ -175,7 +176,7 @@ export default function BarApp({menuData, user}) {
                       Icones = criaIcons(obj.icone);
                       if (!obj.disabled){
                         return (
-                          <ListItem button key={index2} component={RouterLink} to={obj.text}>
+                          <ListItem button key={index2} component={RouterLink} to={obj.to}>
                             <ListItemIcon>
                               <Icones color="primary" />
                             </ListItemIcon>
@@ -198,6 +199,10 @@ export default function BarApp({menuData, user}) {
           
         </Box>
       </Drawer>
+        
+      <Box sx={{backgroundColor:'#e3f2fd', maxHeight: '1200px', height: '800px'}}>
+        <Outlet />
+      </Box>
     </>
   );
 }
