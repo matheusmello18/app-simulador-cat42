@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import  { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper, Button } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
 
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
 import { allEtapaType } from "model";
 
 function TabPanel(props) {
@@ -15,11 +20,10 @@ function TabPanel(props) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
-      style={{width:'75%'}}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -41,13 +45,11 @@ function a11yProps(index) {
 
 const Etapa = ({dataEtapas}) => {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  
   const [etapas, setEtapas] = React.useState(dataEtapas);
   const [value, setValue] = React.useState(0);
   
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+
   
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -56,18 +58,78 @@ const Etapa = ({dataEtapas}) => {
     setValue(activeStep + 1);
   };
 
-  const handleReset = () => {
+/*  const handleReset = () => {
     setActiveStep(0);
   };
+  */
 
   //--------------------------------------------//
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+/**
+ * <Box
+  sx={{
+    // some styles
+    '& . ChildSelector': {
+      bgcolor: 'primary.main',
+    },
+  }}
+>
+ */
+  const SxbyStatus = (etapa) => {
+    if (etapa.DS_STATUS === 'SUCESSO'){
+      return {
+        '&.Mui-selected': {
+          color: `success.light`
+        },
+        color: `success.light`,
+        justifyContent: 'flex-start',
+        alignItems: `flex-start`
+      };
+    } else if (etapa.DS_STATUS === 'ERRO'){
+      return {
+        '&.Mui-selected': {
+          color: `error.light`
+        },
+        color: `error.light`,
+        justifyContent: 'flex-start',
+        alignItems: `flex-start`
+      };      
+    } else if (etapa.DS_STATUS === 'PENDENCIA'){
+      return {
+        '&.Mui-selected': {
+          color: `warning.light`
+        },
+        color: `warning.light`,
+        justifyContent: 'flex-start',
+        alignItems: `flex-start`
+      };
+    } else {
+      return {
+        '&.Mui-selected': {
+          color: `info.light`
+        },
+        color: `info.light`,
+        justifyContent: 'flex-start',
+        alignItems: `flex-start`
+      };
+    }
+  }
 
   useEffect(() => {
+    const load = () => {
+      dataEtapas.forEach((element, index) => {
+        if (element.DS_STATUS === 'SUCESSO'){
+          setActiveStep(index + 1);
+          setValue(index  + 1);
+        }
+      });
+    }
+
     setEtapas(dataEtapas);
+    load();
   }, [dataEtapas])
 
   return (
@@ -80,50 +142,23 @@ const Etapa = ({dataEtapas}) => {
         </Card>
 
 
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', pt:4 }}>
           <Stepper activeStep={activeStep}>
             {etapas.map((etapa, index) => {
               const stepProps = {};
 
-              if (isStepSkipped(index)) {
-                stepProps.completed = false;
-              }
-              
               return (
                 <Step key={index}  {...stepProps}>
-                  <StepLabel>{etapa.DS_ETAPA}</StepLabel>
+                  <StepLabel></StepLabel>
                 </Step>
               );
             })}
           </Stepper>
-
-          {activeStep === etapas.length ? (
-            <React.Fragment>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Box sx={{ flex: '1 1 auto' }} />
-                <Button onClick={handleReset}>Reset</Button>
-              </Box>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-
-              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Box sx={{ flex: '1 1 auto' }} />
-
-                <Button onClick={handleNext}>
-                  {activeStep === etapas.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </Box>
-            </React.Fragment>
-          )}
         </Box>
 
 
         <Grid container spacing={2} sx={{mt: 3}}>
-          <Grid item xs={4}>
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
             <Paper>
               <Tabs
                 orientation="vertical"
@@ -133,30 +168,57 @@ const Etapa = ({dataEtapas}) => {
                 aria-label="Vertical tabs example"
                 sx={{ borderRight: 1, borderColor: 'divider' }}
               >
+             
                 {etapas !== null && 
                   (etapas.map((etapa, index) => {
-                    return (<Tab key={index} label={etapa.DS_ETAPA} {...a11yProps(index)} disabled={etapa.DS_STATUS === 'SUCESSO'} />)
+                    return (
+                      <Tab 
+                        key={index} 
+                        label={<Typography variant="button" display="block" gutterBottom>
+                                 {etapa.DS_ETAPA}
+                               </Typography>}
+                        icon= {etapa.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon />) : 
+                          etapa.DS_STATUS === 'ERRO' ? (<HighlightOffIcon />) : 
+                          etapa.DS_STATUS === 'PENDENCIA' ? (<ErrorOutlineIcon />) : (<PlayCircleOutlineIcon sx={{color:"info.light"}} />)}
+                        iconPosition="start"
+                        sx={SxbyStatus(etapa)}
+                        {...a11yProps(index)} 
+                      />
+                    )
                   }))
                 }
               </Tabs>
             </Paper>
           </Grid>
-          <Grid item xs={8}>
-            <Paper>
-              {etapas !== null && 
-                (etapas.map((etapa, index) => {
-                  return (
+          
+          <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
+            <>
+              {activeStep === etapas.length && (
+                <Paper><h1>Finalizou com sucesso fora</h1></Paper>
+              )}
+              <Paper>
+                {etapas !== null && 
+                  (etapas.map((etapa, index) => {
+                    return (
+                      <TabPanel key={index} value={value} index={index}>
+                        <Typography>{etapa.DS_ACAO}</Typography>
 
-                    <TabPanel key={index} value={value} index={index}>
-                      {etapa.DS_ACAO}
+                        {activeStep === etapas.length ? (<><h1>Finalizou com sucesso dentro</h1></>) : (
+                          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                            <Box sx={{ flex: '1 1 auto' }} />
 
-                      <Button onClick={() => {handleClickTeste(index)}} >Testar</Button>
-                    </TabPanel>
-                    
-                  )
-                }))
-              }
-            </Paper>
+                            <Button onClick={handleNext}>
+                              {activeStep === etapas.length - 1 ? 'Finalizar' : 'Próximo'}
+                            </Button>
+                          </Box>
+                        )}
+                      </TabPanel>
+                      
+                    )
+                  }))
+                }
+              </Paper>
+            </>
           </Grid>
         </Grid>
       </Container> 
