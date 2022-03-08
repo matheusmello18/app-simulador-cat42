@@ -1,18 +1,20 @@
 import React from "react";
 
 import MenuEtapa from "components/atoms/dashboard/Etapa"
-import { allEtapaType } from "model";
+import { allEtapaType, userType } from "model";
 
-const Etapa = ({dataEtapas}) => {
-  return (<MenuEtapa dataEtapas={dataEtapas} />)
+const Etapa = ({dataEtapas, user}) => {
+  return (<MenuEtapa dataEtapas={dataEtapas} user={user} />)
 };
 
 Etapa.defaultProps = {
-  dataEtapas: {}
+  dataEtapas: {},
+  user: {}
 }
 
 Etapa.propTypes = {
-  dataEtapas: allEtapaType.isRequired
+  dataEtapas: allEtapaType.isRequired,
+  user: userType.isRequired
 }
 
 export default Etapa;

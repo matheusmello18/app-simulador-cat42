@@ -1,10 +1,22 @@
 {
   "user": {
-    "DM_ATIVO": "S",
+    "DM_ATIVO_SIMULADOR": "S",
+    "DM_ATIVO_USUARIO": "S",
+    "DS_EMAIL": "matheus.mello@painelfiscal.com.br",
+    "DS_ORGAO": "PORTARIA CAT 42",
+    "DT_CADASTRO": "22/11/2021",
+    "DT_PERIODO": "01/01/2021",
     "E_MAIL": "MATHEUS.MELLO@PAINELFISCAL.COM.BR",
     "HASH_RECOVERY": null,
+    "ID_EMPRESA": 7,
+    "ID_ORGAO": 40,
+    "ID_SIMUL_CADASTRO": 43,
     "ID_USUARIO": 176,
     "NM_COMPLETO": "MATHEUS DE MELLO",
-    "NM_USUARIO": "MATHEUS"
+    "NM_CONTATO": "Matheus de Mello",
+    "NM_EMPRESA": "Painel Fiscal",
+    "NM_USUARIO": "MATHEUS",
+    "NR_CNPJ": "74748778000001",
+    "NR_TELEFONE": "16 919191919"
   }
 }

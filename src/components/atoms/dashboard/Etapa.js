@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import PropTypes from 'prop-types';
-import  { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper, Button } from '@mui/material';
+import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper } from '@mui/material';
+import { Button, TextField , FormControl } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
+import { List, ListItem, ListItemText, ListItemAvatar } from '@mui/material';
 
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-import { allEtapaType } from "model";
+import { allEtapaType, userType } from "model";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,7 +45,8 @@ function a11yProps(index) {
   };
 }
 
-const Etapa = ({dataEtapas}) => {
+const Etapa = ({dataEtapas, user}) => {
+  console.log(dataEtapas);
   const [activeStep, setActiveStep] = React.useState(0);
   
   const [etapas, setEtapas] = React.useState(dataEtapas);
@@ -51,33 +54,27 @@ const Etapa = ({dataEtapas}) => {
   
 
   
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    dataEtapas[activeStep].DS_STATUS = 'SUCESSO';
-    setEtapas(dataEtapas);
-    setValue(activeStep + 1);
+  const handleNext = (e) => {
+    if (e.target.textContent === 'Gerar'){ //Resetar
+      setActiveStep(0);
+      dataEtapas[activeStep].DS_STATUS = 'SUCESSO'; 
+      setEtapas(dataEtapas);
+      setValue(0);
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      dataEtapas[activeStep].DS_STATUS = 'SUCESSO';
+      setEtapas(dataEtapas);
+      setValue(activeStep + 1);
+    }
   };
-
-/*  const handleReset = () => {
-    setActiveStep(0);
-  };
-  */
 
   //--------------------------------------------//
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setActiveStep(newValue);
   };
-/**
- * <Box
-  sx={{
-    // some styles
-    '& . ChildSelector': {
-      bgcolor: 'primary.main',
-    },
-  }}
->
- */
+
   const SxbyStatus = (etapa) => {
     if (etapa.DS_STATUS === 'SUCESSO'){
       return {
@@ -137,7 +134,7 @@ const Etapa = ({dataEtapas}) => {
       <Container sx={{py:4}}>        
         <Card sx={{margin:0}}>
           <Divider sx={{my: 3}}>
-            <Chip label="Importações" />
+            <Chip label={user.DS_ORGAO} />
           </Divider>
         </Card>
 
@@ -196,28 +193,67 @@ const Etapa = ({dataEtapas}) => {
               {activeStep === etapas.length && (
                 <Paper><h1>Finalizou com sucesso fora</h1></Paper>
               )}
-              <Paper>
                 {etapas !== null && 
                   (etapas.map((etapa, index) => {
                     return (
-                      <TabPanel key={index} value={value} index={index}>
-                        <Typography>{etapa.DS_ACAO}</Typography>
+                      <React.Fragment key={index}>
+                        <Paper>
+                          <TabPanel value={value} index={index}>
+                            <Paper variant="outlined" sx={{ p: 2 }}>
+                              <Typography>{etapa.DS_ACAO}</Typography>
+                              <div>
+                                <FormControl fullWidth sx={{ m: 1 }}>
+                                  <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" focused />
+                                </FormControl>
+                              </div>
+                            </Paper>
 
-                        {activeStep === etapas.length ? (<><h1>Finalizou com sucesso dentro</h1></>) : (
-                          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                            <Box sx={{ flex: '1 1 auto' }} />
+                            {activeStep === etapas.length ? (<><h1>Finalizou com sucesso dentro</h1></>) : (
+                              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                
+                                <Button onClick={handleNext}>
+                                  {activeStep === etapas.length -1 ? 'Gerar' : 'Próximo'}
+                                </Button>
+                              
+                              </Box>
+                            )}
+                          </TabPanel>
+                        </Paper>
 
-                            <Button onClick={handleNext}>
-                              {activeStep === etapas.length - 1 ? 'Finalizar' : 'Próximo'}
-                            </Button>
-                          </Box>
+                        {etapa.STATUS.length > 0 && (
+                          <TabPanel value={value} index={index}>
+                            <Paper sx={{px: 3, py: 2}}>
+        
+                              <Divider sx={{mb: 3}}>
+                                <Chip label="Status da Importação" />
+                              </Divider>
+                            
+                              <Paper sx={{px: 3, py: 2}} variant="outlined">
+                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                  {etapa.STATUS.map((pStatus, pIndex) => (
+                                    <>
+                                      <ListItem>
+                                        <ListItemAvatar>
+                                          {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
+                                            pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
+                                                                              (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
+                                        </ListItemAvatar>
+                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
+                                      </ListItem>
+                                      <Divider variant="inset" component="li" />
+                                    </>
+                                  ))}
+                                </List>
+                              </Paper>
+                            
+                            </Paper>
+                          </TabPanel>
                         )}
-                      </TabPanel>
-                      
+                      </React.Fragment>
                     )
                   }))
                 }
-              </Paper>
             </>
           </Grid>
         </Grid>
@@ -227,11 +263,13 @@ const Etapa = ({dataEtapas}) => {
 };
 
 Etapa.defaultProps = {
-  dataEtapas: {}
+  dataEtapas: {},
+  user: {}
 }
 
 Etapa.propTypes = {
-  dataEtapas: allEtapaType.isRequired
+  dataEtapas: allEtapaType.isRequired,
+  user: userType.isRequired
 }
 
 export default Etapa;

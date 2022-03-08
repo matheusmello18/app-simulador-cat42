@@ -1,0 +1,46 @@
+{
+  "dataEtapas": {
+    "ID_SIMUL_STATUS": 2,
+    "DT_PERIODO": "2021-01-01T03:00:00.000Z",
+    "ID_SIMUL_TP_STATUS": 1,
+    "CD_STATUS": "001",
+    "DS_STATUS": "SUCESSO",
+    "ID_SIMUL_ETAPA": 1,
+    "CD_ETAPA": "001",
+    "DS_ETAPA": "Importação Cadastro Produtos",
+    "NM_PROCEDURE1": "SP_...",
+    "NM_PROCEDURE2": null,
+    "DT_INICIAL": "2022-01-01T03:00:00.000Z",
+    "DT_FINAL": null,
+    "ID_ORGAO": 40,
+    "DM_SEQUENCIA": 1,
+    "DM_ACAO_ARQUIVO": "U",
+    "DS_ACAO": "Efetuar upload de planilha padrão com cadastro de 5 produtos",
+    "ID_EMPRESA": 7,
+    "NM_METHOD": "",
+    "STATUS": [
+        {
+            "ID_SIMUL_STATUS": 1,
+            "DT_PERIODO": "2021-01-01T03:00:00.000Z",
+            "ID_SIMUL_TP_STATUS": 2,
+            "CD_STATUS": "002",
+            "DS_STATUS": "ERRO",
+            "ID_SIMUL_ETAPA": 1,
+            "ID_EMPRESA": 7,
+            "ID_USUARIO": 176,
+            "DS_STATUS_LOG": ""
+        },
+        {
+            "ID_SIMUL_STATUS": 2,
+            "DT_PERIODO": "2021-01-01T03:00:00.000Z",
+            "ID_SIMUL_TP_STATUS": 1,
+            "CD_STATUS": "001",
+            "DS_STATUS": "SUCESSO",
+            "ID_SIMUL_ETAPA": 1,
+            "ID_EMPRESA": 7,
+            "ID_USUARIO": 176,
+            "DS_STATUS_LOG": ""
+        }
+    ]
+  }
+}
