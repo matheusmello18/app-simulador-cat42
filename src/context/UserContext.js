@@ -120,7 +120,6 @@ export const UserProvider = ({ children }) => {
 
   const recovery = async (id, email, nm_usuario, password) => {
     const senha = MD5(nm_usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
-    console.log(nm_usuario.toUpperCase(), password, senha);
     const senhaWeb = MD5(password).toString();
     const response = await axios.post('/api/v1/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
     const { success, user } = response.data;

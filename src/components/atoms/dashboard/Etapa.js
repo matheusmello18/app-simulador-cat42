@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper } from '@mui/material';
 import { Button, TextField , FormControl } from '@mui/material';
@@ -11,6 +11,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import { allEtapaType, userType } from "model";
+import {EnviarArquivo} from "hooks/EnviarArquivo";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,26 +46,32 @@ function a11yProps(index) {
   };
 }
 
-const Etapa = ({dataEtapas, user}) => {
-  console.log(dataEtapas);
-  const [activeStep, setActiveStep] = React.useState(0);
-  
-  const [etapas, setEtapas] = React.useState(dataEtapas);
-  const [value, setValue] = React.useState(0);
-  
+const Etapa = ({dataEtapas, user, setEtapas}) => {
 
+  const [uploadFile, setUploadFile] = React.useState();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [value, setValue] = React.useState(0);  
+
+  const handleClickEnviar = async (etapa) => {
+    
+    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO)
+    console.log(envio);
+    console.log(envio.data);
+
+    etapa.DS_STATUS = 'PENDENCIA';
+    const newEtapas =  [...dataEtapas];
+    newEtapas[activeStep] = etapa;
+    setEtapas(newEtapas);
+    
+  }
   
-  const handleNext = (e) => {
+  const handleNext = (e, etapa) => {
     if (e.target.textContent === 'Gerar'){ //Resetar
       setActiveStep(0);
-      dataEtapas[activeStep].DS_STATUS = 'SUCESSO'; 
-      setEtapas(dataEtapas);
       setValue(0);
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      dataEtapas[activeStep].DS_STATUS = 'SUCESSO';
-      setEtapas(dataEtapas);
-      setValue(activeStep + 1);
+      setValue((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
@@ -115,19 +122,20 @@ const Etapa = ({dataEtapas, user}) => {
     }
   }
 
-  useEffect(() => {
+
+  React.useEffect(() => {
     const load = () => {
       dataEtapas.forEach((element, index) => {
         if (element.DS_STATUS === 'SUCESSO'){
-          setActiveStep(index + 1);
-          setValue(index  + 1);
+          setActiveStep(index);
+          setValue(index);
         }
-      });
+      });     
     }
 
-    setEtapas(dataEtapas);
     load();
-  }, [dataEtapas])
+  }, [dataEtapas]); 
+
 
   return (
     <>
@@ -141,15 +149,17 @@ const Etapa = ({dataEtapas, user}) => {
 
         <Box sx={{ width: '100%', pt:4 }}>
           <Stepper activeStep={activeStep}>
-            {etapas.map((etapa, index) => {
-              const stepProps = {};
+          {dataEtapas !== null && (
+            dataEtapas.map((etapa, index) => {
+                
 
-              return (
-                <Step key={index}  {...stepProps}>
-                  <StepLabel></StepLabel>
-                </Step>
-              );
-            })}
+                return (
+                  <Step key={index}>
+                    <StepLabel></StepLabel>
+                  </Step>
+                );
+              })
+            )}
           </Stepper>
         </Box>
 
@@ -165,98 +175,103 @@ const Etapa = ({dataEtapas, user}) => {
                 aria-label="Vertical tabs example"
                 sx={{ borderRight: 1, borderColor: 'divider' }}
               >
-             
-                {etapas !== null && 
-                  (etapas.map((etapa, index) => {
+                {dataEtapas !== null && 
+                  (dataEtapas.map((etapa, index) => {
                     return (
                       <Tab 
                         key={index} 
                         label={<Typography variant="button" display="block" gutterBottom>
                                  {etapa.DS_ETAPA}
                                </Typography>}
-                        icon= {etapa.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon />) : 
-                          etapa.DS_STATUS === 'ERRO' ? (<HighlightOffIcon />) : 
-                          etapa.DS_STATUS === 'PENDENCIA' ? (<ErrorOutlineIcon />) : (<PlayCircleOutlineIcon sx={{color:"info.light"}} />)}
+                        icon= {etapa.DS_STATUS === 'SUCESSO'   ? (<CheckCircleOutlineIcon />) : 
+                               etapa.DS_STATUS === 'ERRO'      ? (<HighlightOffIcon />) : 
+                               etapa.DS_STATUS === 'PENDENCIA' ? (<ErrorOutlineIcon />) : (<PlayCircleOutlineIcon sx={{color:"info.light"}} />)}
                         iconPosition="start"
                         sx={SxbyStatus(etapa)}
                         {...a11yProps(index)} 
                       />
                     )
                   }))
-                }
+                } 
               </Tabs>
             </Paper>
           </Grid>
           
           <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
             <>
-              {activeStep === etapas.length && (
-                <Paper><h1>Finalizou com sucesso fora</h1></Paper>
-              )}
-                {etapas !== null && 
-                  (etapas.map((etapa, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <Paper>
-                          <TabPanel value={value} index={index}>
-                            <Paper variant="outlined" sx={{ p: 2 }}>
-                              <Typography>{etapa.DS_ACAO}</Typography>
-                              <div>
-                                <FormControl fullWidth sx={{ m: 1 }}>
-                                  <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" focused />
-                                </FormControl>
-                              </div>
-                            </Paper>
+              {dataEtapas !== null && 
+                (dataEtapas.map((etapa, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <Paper>
+                        <TabPanel value={value} index={index}>
+                          <Paper variant="outlined" sx={{ p: 2 }}>
+                            <div>
+                              <FormControl fullWidth>
+                                <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" onChange={(e) => setUploadFile(e.target.files)} focused />
+                              </FormControl>
+                            </div>
+                          </Paper>
 
-                            {activeStep === etapas.length ? (<><h1>Finalizou com sucesso dentro</h1></>) : (
-                              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                <Box sx={{ flex: '1 1 auto' }} />
-                                
-                                <Button onClick={handleNext}>
-                                  {activeStep === etapas.length -1 ? 'Gerar' : 'Próximo'}
-                                </Button>
+                          {activeStep !== dataEtapas.length && (
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                              <Box sx={{ flex: '1 1 auto' }} />
                               
-                              </Box>
-                            )}
-                          </TabPanel>
-                        </Paper>
+                              <Button 
+                                variant="contained" 
+                                onClick={() => handleClickEnviar(etapa)}
+                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar</Button>
+                              
+                              <Button 
+                                variant="outlined" 
+                                onClick={(e) => handleNext(e, etapa)}
+                                sx={{ml:2}}
+                                disabled={etapa.DS_STATUS !== 'SUCESSO'}
+                              >
+                                {activeStep === dataEtapas.length -1 ? 'Gerar' : 'Próximo'}
+                              </Button>
+                            
+                            </Box>
+                          )}
+                        </TabPanel>
+                      </Paper>
 
-                        {etapa.STATUS.length > 0 && (
-                          <TabPanel value={value} index={index}>
-                            <Paper sx={{px: 3, py: 2}}>
-        
-                              <Divider sx={{mb: 3}}>
-                                <Chip label="Status da Importação" />
-                              </Divider>
-                            
-                              <Paper sx={{px: 3, py: 2}} variant="outlined">
-                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                                  {etapa.STATUS.map((pStatus, pIndex) => (
-                                    <>
-                                      <ListItem>
-                                        <ListItemAvatar>
-                                          {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
-                                            pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
-                                                                              (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
-                                        </ListItemAvatar>
-                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
-                                      </ListItem>
-                                      <Divider variant="inset" component="li" />
-                                    </>
-                                  ))}
-                                </List>
-                              </Paper>
-                            
+                      {etapa.STATUS.length > 0 && (
+                        <TabPanel value={value} index={index}>
+                          <Paper sx={{px: 3, py: 2}}>
+      
+                            <Divider sx={{mb: 3}}>
+                              <Chip label="Status da Importação" />
+                            </Divider>
+                          
+                            <Paper sx={{px: 3, py: 2}} variant="outlined">
+                              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                {etapa.STATUS.map((pStatus, pIndex) => (
+                                  <React.Fragment key={pIndex}>
+                                    <ListItem>
+                                      <ListItemAvatar>
+                                        {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
+                                          pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
+                                                                            (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
+                                      </ListItemAvatar>
+                                      <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
+                                    </ListItem>
+                                    <Divider variant="inset" component="li" />
+                                  </React.Fragment>
+                                ))}
+                              </List>
                             </Paper>
-                          </TabPanel>
-                        )}
-                      </React.Fragment>
-                    )
-                  }))
-                }
+                          
+                          </Paper>
+                        </TabPanel>
+                      )}
+                    </React.Fragment>
+                  )
+                }))
+              }
             </>
           </Grid>
-        </Grid>
+        </Grid> 
       </Container> 
     </>
   )
@@ -264,12 +279,14 @@ const Etapa = ({dataEtapas, user}) => {
 
 Etapa.defaultProps = {
   dataEtapas: {},
-  user: {}
+  user: {},
+  setEtapas: null
 }
 
 Etapa.propTypes = {
   dataEtapas: allEtapaType.isRequired,
-  user: userType.isRequired
+  user: userType.isRequired,
+  setEtapas: PropTypes.func
 }
 
 export default Etapa;
