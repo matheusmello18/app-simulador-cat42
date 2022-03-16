@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+
 import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper } from '@mui/material';
 import { Button, TextField , FormControl } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
@@ -12,6 +13,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import { allEtapaType, userType } from "model";
 import {EnviarArquivo} from "hooks/EnviarArquivo";
+import config from 'config';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,7 +56,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
 
   const handleClickEnviar = async (etapa) => {
     
-    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO)
+    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD)
     console.log(envio);
     console.log(envio.data);
 
@@ -201,72 +203,106 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
             <>
               {dataEtapas !== null && 
                 (dataEtapas.map((etapa, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <Paper>
-                        <TabPanel value={value} index={index}>
-                          <Paper variant="outlined" sx={{ p: 2 }}>
-                            <div>
-                              <FormControl fullWidth>
-                                <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" onChange={(e) => setUploadFile(e.target.files)} focused />
-                              </FormControl>
-                            </div>
-                          </Paper>
+                  if (etapa.nm_method === 'GeraResultadoCat42'){
+                    return (
+                      <React.Fragment key={index}>
+                        <Paper>
+                          <TabPanel value={value} index={index}>
+                              <Paper variant="outlined" sx={{ p: 2 }}>
+                              </Paper>
+                          </TabPanel>
+                        </Paper>
 
-                          {activeStep !== dataEtapas.length && (
-                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                              <Box sx={{ flex: '1 1 auto' }} />
-                              
-                              <Button 
-                                variant="contained" 
-                                onClick={() => handleClickEnviar(etapa)}
-                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar</Button>
-                              
-                              <Button 
-                                variant="outlined" 
-                                onClick={(e) => handleNext(e, etapa)}
-                                sx={{ml:2}}
-                                disabled={etapa.DS_STATUS !== 'SUCESSO'}
-                              >
-                                {activeStep === dataEtapas.length -1 ? 'Gerar' : 'Próximo'}
-                              </Button>
-                            
-                            </Box>
-                          )}
-                        </TabPanel>
-                      </Paper>
-
-                      {etapa.STATUS.length > 0 && (
-                        <TabPanel value={value} index={index}>
-                          <Paper sx={{px: 3, py: 2}}>
-      
-                            <Divider sx={{mb: 3}}>
-                              <Chip label="Status da Importação" />
-                            </Divider>
-                          
-                            <Paper sx={{px: 3, py: 2}} variant="outlined">
-                              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                                {etapa.STATUS.map((pStatus, pIndex) => (
-                                  <React.Fragment key={pIndex}>
-                                    <ListItem>
-                                      <ListItemAvatar>
-                                        {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
-                                          pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
-                                                                            (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
-                                      </ListItemAvatar>
-                                      <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
-                                    </ListItem>
-                                    <Divider variant="inset" component="li" />
-                                  </React.Fragment>
-                                ))}
-                              </List>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                          <Box sx={{ flex: '1 1 auto' }} />
+                          <Button 
+                            variant="contained" 
+                            onClick={() => handleClickGerar(etapa)}
+                            disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar
+                          </Button>
+                        </Box>
+                      </React.Fragment>
+                    )
+                  } else {
+                    return (
+                      <React.Fragment key={index}>
+                        <Paper>
+                          <TabPanel value={value} index={index}>
+                            <Paper variant="outlined" sx={{ p: 2 }}>
+                              <div>
+                                <FormControl fullWidth>
+                                  <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" onChange={(e) => setUploadFile(e.target.files)} focused />
+                                </FormControl>
+                              </div>
                             </Paper>
-                          
-                          </Paper>
-                        </TabPanel>
-                      )}
-                    </React.Fragment>
-                  )
+
+                            {activeStep !== dataEtapas.length && (
+                              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                
+                                {etapa.NM_METHOD === 'ImportarArqExcel' && (
+                                  <Button
+                                    href= {`${config.baseUrlApi}/api/v1/etapas/download/?arquivo=${etapa.NM_METHOD}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    variant="contained"
+                                    sx={{mr:2}}
+                                  >Planilha Modelo
+                                  </Button>
+                                )}
+
+                                <Button 
+                                  variant="contained" 
+                                  onClick={() => handleClickEnviar(etapa)}
+                                  disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar
+                                </Button>
+                                
+                                <Button 
+                                  variant="outlined" 
+                                  onClick={(e) => handleNext(e, etapa)}
+                                  sx={{ml:2}}
+                                  disabled={etapa.DS_STATUS !== 'SUCESSO'}
+                                >
+                                  {activeStep === dataEtapas.length -1 ? 'Gerar' : 'Próximo'}
+                                </Button>
+                              
+                              </Box>
+                            )}
+                          </TabPanel>
+                        </Paper>
+
+                        {etapa.STATUS.length > 0 && (
+                          <TabPanel value={value} index={index}>
+                            <Paper sx={{px: 3, py: 2}}>
+        
+                              <Divider sx={{mb: 3}}>
+                                <Chip label="Status da Importação" />
+                              </Divider>
+                            
+                              <Paper sx={{px: 3, py: 2}} variant="outlined">
+                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                  {etapa.STATUS.map((pStatus, pIndex) => (
+                                    <React.Fragment key={pIndex}>
+                                      <ListItem>
+                                        <ListItemAvatar>
+                                          {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
+                                            pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
+                                                                              (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
+                                        </ListItemAvatar>
+                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
+                                      </ListItem>
+                                      <Divider variant="inset" component="li" />
+                                    </React.Fragment>
+                                  ))}
+                                </List>
+                              </Paper>
+                            
+                            </Paper>
+                          </TabPanel>
+                        )}
+                      </React.Fragment>
+                    )
+                  }
                 }))
               }
             </>

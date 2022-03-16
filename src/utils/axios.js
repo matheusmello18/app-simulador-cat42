@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from 'config';
 
-const axiosServices = axios.create({baseURL: "http://192.168.1.111:8081"});
+const axiosServices = axios.create({baseURL: config.baseUrlApi});
 
 axiosServices.interceptors.response.use(
     (response) => response,
