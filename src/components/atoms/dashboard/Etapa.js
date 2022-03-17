@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 
 import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper } from '@mui/material';
-import { Button, TextField , FormControl } from '@mui/material';
+import { Button, TextField , FormControl, FormHelperText } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
 import { List, ListItem, ListItemText, ListItemAvatar } from '@mui/material';
 
@@ -11,6 +11,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
+import AlertDialogSlide from "components/atoms/AlertDialogSlide";
 import { allEtapaType, userType } from "model";
 import {EnviarArquivo} from "hooks/EnviarArquivo";
 import config from 'config';
@@ -49,32 +50,59 @@ function a11yProps(index) {
 }
 
 const Etapa = ({dataEtapas, user, setEtapas}) => {
+  /**
+   * variaveis relacionados ao modal
+   */
+   const [openModal, setOpenModal] = React.useState(false);
+   const [tituloModal, setTituloModal] = React.useState('');
+   const [subtituloModal, setSubtituloModal] = React.useState('');
+   const handleCloseModal = () => {
+     setOpenModal(false);
+   }
 
-  const [uploadFile, setUploadFile] = React.useState();
+  const [uploadFile, setUploadFile] = React.useState('');
+  const [uploadFileRequered, setUploadFileRequered] = React.useState('');
   const [activeStep, setActiveStep] = React.useState(0);
   const [value, setValue] = React.useState(0);  
 
+  const handleClickGerar = async (etapa) => {
+
+
+    setActiveStep(0);
+    setValue(0);
+  }
+
   const handleClickEnviar = async (etapa) => {
-    
+    setUploadFileRequered('')
+    if (uploadFile.length === 0){
+      setUploadFileRequered('Preenchimento Obrigatório')
+      return;
+    }
+
     var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD)
-    console.log(envio);
-    console.log(envio.data);
+    const { success, message } = envio.data;
+    if (success === 'false'){
+      setOpenModal(true);
+      setTituloModal("Falha no processamento.");
+      setSubtituloModal(message);
+    } else {
+      setOpenModal(true);
+      setTituloModal("Processamento.");
+      setSubtituloModal(message);
+    }
 
     etapa.DS_STATUS = 'PENDENCIA';
     const newEtapas =  [...dataEtapas];
     newEtapas[activeStep] = etapa;
     setEtapas(newEtapas);
+    setUploadFile(null);
+    setUploadFileRequered('')
     
   }
   
   const handleNext = (e, etapa) => {
-    if (e.target.textContent === 'Gerar'){ //Resetar
-      setActiveStep(0);
-      setValue(0);
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setValue((prevActiveStep) => prevActiveStep + 1);
-    }
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setValue((prevActiveStep) => prevActiveStep + 1);
   };
 
   //--------------------------------------------//
@@ -203,24 +231,24 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
             <>
               {dataEtapas !== null && 
                 (dataEtapas.map((etapa, index) => {
-                  if (etapa.nm_method === 'GeraResultadoCat42'){
+                  if (etapa.DM_ACAO_ARQUIVO === 'D'){
                     return (
                       <React.Fragment key={index}>
                         <Paper>
                           <TabPanel value={value} index={index}>
-                              <Paper variant="outlined" sx={{ p: 2 }}>
-                              </Paper>
+                            <Paper variant="outlined" sx={{ p: 2 }}>
+                            </Paper>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                              <Box sx={{ flex: '1 1 auto' }} />
+                              <Button 
+                                variant="contained" 
+                                onClick={() => handleClickGerar(etapa)}
+                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Gear
+                              </Button>
+                            </Box>
                           </TabPanel>
                         </Paper>
 
-                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                          <Box sx={{ flex: '1 1 auto' }} />
-                          <Button 
-                            variant="contained" 
-                            onClick={() => handleClickGerar(etapa)}
-                            disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar
-                          </Button>
-                        </Box>
                       </React.Fragment>
                     )
                   } else {
@@ -231,7 +259,15 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                             <Paper variant="outlined" sx={{ p: 2 }}>
                               <div>
                                 <FormControl fullWidth>
-                                  <TextField  type="file" id="outlined-basic" label="Selecionar Arquivo" onChange={(e) => setUploadFile(e.target.files)} focused />
+                                  <TextField  
+                                    type="file" 
+                                    id="outlined-basic" 
+                                    label="Selecionar Arquivo" 
+                                    onChange={(e) => setUploadFile(e.target.files)} 
+                                    focused
+                                    aria-describedby={`component-error-text-${index}`}
+                                  />
+                                  <FormHelperText id={`component-error-text-${index}`} sx={{color: 'red'}}>{uploadFileRequered}</FormHelperText>
                                 </FormControl>
                               </div>
                             </Paper>
@@ -254,7 +290,8 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                 <Button 
                                   variant="contained" 
                                   onClick={() => handleClickEnviar(etapa)}
-                                  disabled={etapa.DS_STATUS === 'SUCESSO'} >Enviar
+                                  disabled={etapa.DS_STATUS === 'SUCESSO'} 
+                                > Enviar
                                 </Button>
                                 
                                 <Button 
@@ -262,8 +299,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                   onClick={(e) => handleNext(e, etapa)}
                                   sx={{ml:2}}
                                   disabled={etapa.DS_STATUS !== 'SUCESSO'}
-                                >
-                                  {activeStep === dataEtapas.length -1 ? 'Gerar' : 'Próximo'}
+                                > Próximo
                                 </Button>
                               
                               </Box>
@@ -308,7 +344,14 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
             </>
           </Grid>
         </Grid> 
-      </Container> 
+      </Container>
+
+      <AlertDialogSlide 
+        onClose={handleCloseModal}
+        titulo={tituloModal}
+        subtitulo={subtituloModal}
+        open={openModal}
+      />
     </>
   )
 };
