@@ -79,8 +79,8 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
       return;
     }
 
-    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD)
-    const { success, message } = envio.data;
+    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2);
+    const { success, message, newEtapa } = envio.data;
     if (success === 'false'){
       setOpenModal(true);
       setTituloModal("Falha no processamento.");
@@ -91,9 +91,9 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
       setSubtituloModal(message);
     }
 
-    etapa.DS_STATUS = 'PENDENCIA';
+    //etapa.DS_STATUS = 'PENDENCIA';
     const newEtapas =  [...dataEtapas];
-    newEtapas[activeStep] = etapa;
+    newEtapas[activeStep] = newEtapa;
     setEtapas(newEtapas);
     setUploadFile(null);
     setUploadFileRequered('')
