@@ -1,6 +1,6 @@
 import axios from 'utils/axios';
 
-export const EnviarArquivo = async ( id_simul_etapa, file, id_empresa, id_usuario, dt_periodo, nr_cnpj, nm_method ) => {
+export const EnviarArquivo = async ( id_simul_etapa, file, id_empresa, id_usuario, dt_periodo, nr_cnpj, nm_method, nm_procedure1, nm_procedure2 ) => {
   var formData = new FormData();
 
   formData.append('id_simul_etapa', id_simul_etapa);
@@ -9,6 +9,8 @@ export const EnviarArquivo = async ( id_simul_etapa, file, id_empresa, id_usuari
   formData.append('dt_periodo', dt_periodo);
   formData.append('nr_cnpj', nr_cnpj);
   formData.append('nm_method', nm_method);
+  formData.append('nm_procedure1', nm_procedure1);
+  formData.append('nm_procedure2', nm_procedure2);
   formData.append('arquivo', file[0]);
 
   return await axios.post(
