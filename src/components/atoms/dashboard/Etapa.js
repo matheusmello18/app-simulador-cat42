@@ -95,7 +95,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
     const newEtapas =  [...dataEtapas];
     console.log(newEtapas);
     console.log(newEtapas[activeStep]);
-    console.log(row.length );
+    console.log(row );
 
     if (row !== null) {
       newEtapas[activeStep] = row;

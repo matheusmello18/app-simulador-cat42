@@ -1,4 +1,4 @@
 const config = {
-  baseUrlApi: "http://192.168.1.111:8081"
+  baseUrlApi: "http://192.168.0.131:8081"
 }
 export default config;
