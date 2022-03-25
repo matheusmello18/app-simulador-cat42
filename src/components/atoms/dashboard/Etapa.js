@@ -79,7 +79,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
       return;
     }
 
-    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2);
+    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO);
     const { success, message, row } = envio.data;
     if (success === 'false'){
       setOpenModal(true);
@@ -93,15 +93,13 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
 
     //etapa.DS_STATUS = 'PENDENCIA';
     const newEtapas =  [...dataEtapas];
-    console.log(newEtapas);
-    console.log(newEtapas[activeStep]);
-    console.log(row );
-
+ 
     if (row !== null) {
       newEtapas[activeStep] = row;
       setEtapas(newEtapas);
-      setUploadFile(null);
-      setUploadFileRequered('')
+      setUploadFile('');
+      setUploadFileRequered('');
+      document.getElementById('outlined-basic').value = null;
     }
     
   }
@@ -268,7 +266,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                   <TextField  
                                     type="file" 
                                     id="outlined-basic" 
-                                    label="Selecionar Arquivo" 
+                                    label="Selecionar Arquivo"
                                     onChange={(e) => setUploadFile(e.target.files)} 
                                     focused
                                     aria-describedby={`component-error-text-${index}`}
@@ -331,7 +329,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                             pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
                                                                               (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
                                         </ListItemAvatar>
-                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Período: ",pStatus.DT_PERIODO)} />
+                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Data status: ",pStatus.DT_STATUS)} />
                                       </ListItem>
                                       <Divider variant="inset" component="li" />
                                     </React.Fragment>

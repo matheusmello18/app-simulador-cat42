@@ -17,8 +17,6 @@ import useAuth from "hooks/useAuth";
 
 export default function BarApp({menuData, user}) {
 
-  console.log(menuData, user);
-
   function criaIcons(word) {
     const iconsNames = Object.keys(icons)
 
@@ -27,8 +25,6 @@ export default function BarApp({menuData, user}) {
     const Icon = icons[bestMathch]
     return Icon
   }
-
-  console.log(user);
 
   const { logout } = useAuth();
 
