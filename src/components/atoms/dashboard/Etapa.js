@@ -79,7 +79,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
       return;
     }
 
-    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO);
+    var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO, user.ID_PROJETO, user.ID_MODULO);
     const { success, message, row } = envio.data;
     if (success === 'false'){
       setOpenModal(true);
