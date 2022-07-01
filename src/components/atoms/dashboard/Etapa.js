@@ -14,6 +14,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import AlertDialogSlide from "components/atoms/AlertDialogSlide";
 import { allEtapaType, userType } from "model";
 import {EnviarArquivo} from "hooks/EnviarArquivo";
+import {SolicitaGeracao} from "hooks/SolicitaGeracao";
 import config from 'config';
 
 function TabPanel(props) {
@@ -63,13 +64,33 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
   const [uploadFile, setUploadFile] = React.useState('');
   const [uploadFileRequered, setUploadFileRequered] = React.useState('');
   const [activeStep, setActiveStep] = React.useState(0);
-  const [value, setValue] = React.useState(0);  
+  const [value, setValue] = React.useState(0);
 
   const handleClickGerar = async (etapa) => {
 
+    var envio = await SolicitaGeracao(etapa.ID_SIMUL_ETAPA, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO, user.ID_PROJETO, user.ID_MODULO);
+    const { success, message, row } = envio.data;
+    if (success === 'false'){
+      setOpenModal(true);
+      setTituloModal("Falha no processamento.");
+      setSubtituloModal(message);
+    } else {
+      setOpenModal(true);
+      setTituloModal("Processamento.");
+      setSubtituloModal(message);
+    }
 
-    setActiveStep(0);
-    setValue(0);
+    //etapa.DS_STATUS = 'PENDENCIA';
+    const newEtapas =  [...dataEtapas];
+ 
+    if (row !== null) {
+      newEtapas[activeStep] = row;
+      setEtapas(newEtapas);
+      setUploadFile('');
+      setUploadFileRequered('');
+      document.getElementById('outlined-basic').value = null;
+    }
+
   }
 
   const handleClickEnviar = async (etapa) => {
@@ -159,12 +180,15 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
 
   React.useEffect(() => {
     const load = () => {
-      dataEtapas.forEach((element, index) => {
+      setActiveStep((prevActiveStep) => prevActiveStep);
+      setValue((prevActiveStep) => prevActiveStep);
+      
+      /*dataEtapas.forEach((element, index) => {
         if (element.DS_STATUS === 'SUCESSO'){
-          setActiveStep(index);
-          setValue(index);
+          setActiveStep(activeStep);
+          setValue(activeStep);
         }
-      });     
+      });*/
     }
 
     load();
@@ -247,7 +271,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                               <Button 
                                 variant="contained" 
                                 onClick={() => handleClickGerar(etapa)}
-                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Gear
+                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Gerar
                               </Button>
                             </Box>
                           </TabPanel>
