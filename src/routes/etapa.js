@@ -10,9 +10,10 @@ import useAuth from 'hooks/useAuth';
 const Etapa = () => {
   const { user } = useAuth();
   var [etapas, setEtapas] = useState([]);
-  
+
   const BuscaEtapa = async (usuario) => {
     var data = await useEtapas(usuario.ID_EMPRESA, usuario.ID_USUARIO, usuario.DT_PERIODO);
+    console.log(data);
     setEtapas(data);
   }
 

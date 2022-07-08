@@ -5,6 +5,8 @@ import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper
 import { Button, TextField , FormControl, FormHelperText } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
 import { List, ListItem, ListItemText, ListItemAvatar } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+//import { DataGrid } from '@material-ui/data-grid';
 
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -16,6 +18,71 @@ import { allEtapaType, userType } from "model";
 import {EnviarArquivo} from "hooks/EnviarArquivo";
 import {SolicitaGeracao} from "hooks/SolicitaGeracao";
 import config from 'config';
+
+const columns = [
+  {
+    field: 'CD_PRODUTO',
+    headerName: 'Código Produto',
+    width: 150,
+    hide: true
+  },
+  {
+    field: 'CD_STATUS',
+    headerName: 'Cód. Status',
+    width: 110,
+    hide: true
+  },
+  {
+    field: 'DS_PRODUTO',
+    headerName: 'Produto',
+    width: 440,
+  },
+  {
+    field: 'DS_STATUS',
+    headerName: 'Desc. Status',
+    width: 110,
+  },
+  {
+    field: 'DT_STATUS',
+    headerName: 'Dt. Status',
+    width: 110,
+    hide: true
+  },
+  { 
+    field: 'ID_PRODUTO', 
+    headerName: 'ID',
+    type: 'number',
+    width: 90,
+    identity: true,
+    hide: true
+  },
+  {
+    field: 'ID_SIMUL_ETAPA',
+    headerName: 'Id. Etapa',
+    type: 'number',
+    width: 110,
+    hide: true
+  },
+  {
+    field: 'ID_SIMUL_TP_STATUS',
+    headerName: 'Tp Status',
+    type: 'number',
+    width: 110,
+    hide: true
+  }
+];
+
+const rows = [
+  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -335,6 +402,30 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                           </TabPanel>
                         </Paper>
 
+{/*
+a lista abaixo aparecer para dm_lista_prod = n
+montar a lista de produtos que terá seu próprios estatus
+*/}
+                        {etapa.DM_LISTA_PROD === 'S' && (
+                          <TabPanel value={value} index={index}>
+                            <Paper>
+                              <div style={{ height: 400, width: '100%', pt: 1 }}>
+                                <DataGrid
+                                  rows={etapa.PRODS}
+                                  columns={columns}
+                                  pageSize={5}
+                                  rowsPerPageOptions={[5]}
+                                  getRowId={(row) => row.ID_PRODUTO}
+                                  checkboxSelection
+                                  isRowSelectable={(params) => { console.log(params); return true }} //GridRowParams
+                                  //onSelectionModelChange // GridSelectionModel
+                                  //selectionModel //GridSelectionModel
+                                />
+                              </div>
+                            </Paper>
+                          </TabPanel>
+                        )}
+
                         {etapa.STATUS.length > 0 && (
                           <TabPanel value={value} index={index}>
                             <Paper sx={{px: 3, py: 2}}>
@@ -349,11 +440,11 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                     <React.Fragment key={pIndex}>
                                       <ListItem>
                                         <ListItemAvatar>
-                                          {pStatus.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
-                                            pStatus.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
+                                          {etapa.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
+                                            etapa.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
                                                                               (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
                                         </ListItemAvatar>
-                                        <ListItemText primary={pStatus.DS_STATUS_LOG} secondary={"".concat("Data status: ",pStatus.DT_STATUS)} />
+                                        <ListItemText primary={pStatus.DS_TAREFA} secondary={"".concat("Data status: ",pStatus.DT_LOG)} />
                                       </ListItem>
                                       <Divider variant="inset" component="li" />
                                     </React.Fragment>
@@ -363,6 +454,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                             
                             </Paper>
                           </TabPanel>
+                        
                         )}
                       </React.Fragment>
                     )
