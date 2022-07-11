@@ -63,7 +63,7 @@ export default function BarApp({menuData, user}) {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1}}>
         <AppBar position="static">
           <Toolbar>
             <IconButton
@@ -196,7 +196,7 @@ export default function BarApp({menuData, user}) {
         </Box>
       </Drawer>
         
-      <Box sx={{backgroundColor:'#e3f2fd', maxHeight: '1200px', height: '800px'}}>
+      <Box sx={{backgroundColor:'#e3f2fd', minHeight: '1000px'}}>
         <Outlet />
       </Box>
     </>
