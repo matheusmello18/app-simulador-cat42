@@ -5,8 +5,8 @@ import { Card, Box, Container, Tabs, Tab, Typography, Chip, Divider, Grid, Paper
 import { Button, TextField , FormControl, FormHelperText } from '@mui/material';
 import { StepLabel, Step, Stepper } from '@mui/material';
 import { List, ListItem, ListItemText, ListItemAvatar } from '@mui/material';
+import { Fade, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-//import { DataGrid } from '@material-ui/data-grid';
 
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -15,8 +15,8 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import AlertDialogSlide from "components/atoms/AlertDialogSlide";
 import { allEtapaType, userType } from "model";
-import {EnviarArquivo} from "hooks/EnviarArquivo";
-import {SolicitaGeracao} from "hooks/SolicitaGeracao";
+import { EnviarArquivo } from "hooks/EnviarArquivo";
+import { SolicitaGeracao } from "hooks/SolicitaGeracao";
 import config from 'config';
 
 const columns = [
@@ -112,6 +112,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
    const [openModal, setOpenModal] = React.useState(false);
    const [tituloModal, setTituloModal] = React.useState('');
    const [subtituloModal, setSubtituloModal] = React.useState('');
+   const [loading, setLoading] = React.useState(false);
    const handleCloseModal = () => {
      setOpenModal(false);
    }
@@ -122,9 +123,14 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
   const [value, setValue] = React.useState(0);
 
   const handleClickGerar = async (etapa) => {
+    setLoading((prevLoading) => !prevLoading);
 
     var envio = await SolicitaGeracao(etapa.ID_SIMUL_ETAPA, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO, user.ID_PROJETO, user.ID_MODULO);
+    console.log(envio);
     const { success, message, row } = envio.data;
+
+    setLoading((prevLoading) => !prevLoading);
+
     if (success === 'false'){
       setOpenModal(true);
       setTituloModal("Falha no processamento.");
@@ -141,8 +147,6 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
     if (row !== null) {
       newEtapas[activeStep] = row;
       setEtapas(newEtapas);
-      setUploadFile('');
-      setUploadFileRequered('');
       document.getElementById('outlined-basic').value = null;
     }
 
@@ -155,8 +159,13 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
       return;
     }
 
+    setLoading((prevLoading) => !prevLoading);
+
     var envio = await EnviarArquivo(etapa.ID_SIMUL_ETAPA, uploadFile, user.ID_EMPRESA, user.ID_USUARIO, user.DT_PERIODO, user.NR_CNPJ, etapa.NM_METHOD, etapa.NM_PROCEDURE1, etapa.NM_PROCEDURE2, user.ID_ORGAO, user.ID_PROJETO, user.ID_MODULO);
     const { success, message, row } = envio.data;
+
+    setLoading((prevLoading) => !prevLoading);
+
     if (success === 'false'){
       setOpenModal(true);
       setTituloModal("Falha no processamento.");
@@ -314,6 +323,17 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
             <>
               {dataEtapas !== null && 
                 (dataEtapas.map((etapa, index) => {
+                  let ableBtnEnviar = true; //desabilita
+                  //let ableBtnEnviar = false; //habilita
+
+                  if (etapa.DS_STATUS !== 'SUCESSO'){
+                    ableBtnEnviar = false;
+                    if (index > 0){
+                      ableBtnEnviar = true;
+                      if (dataEtapas[index-1].DS_STATUS === 'SUCESSO')
+                        ableBtnEnviar = false;
+                    }
+                  }
                   if (etapa.DM_ACAO_ARQUIVO === 'D'){
                     return (
                       <React.Fragment key={index}>
@@ -326,7 +346,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                               <Button 
                                 variant="contained" 
                                 onClick={() => handleClickGerar(etapa)}
-                                disabled={etapa.DS_STATUS === 'SUCESSO'} >Gerar
+                                disabled={ableBtnEnviar} >Gerar
                               </Button>
                             </Box>
                           </TabPanel>
@@ -370,13 +390,24 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                   </Button>
                                 )}
 
+                                <Box sx={{ height: 40, paddingRight: "15px" }}>
+                                  <Fade
+                                    in={loading}
+                                    style={{
+                                      transitionDelay: loading ? '800ms' : '0ms',
+                                    }}
+                                    unmountOnExit
+                                  >
+                                    <CircularProgress />
+                                  </Fade>
+                                </Box>
+
                                 <Button 
                                   variant="contained" 
                                   onClick={() => handleClickEnviar(etapa)}
-                                  disabled={etapa.DS_STATUS === 'SUCESSO'} 
-                                > Enviar
+                                  disabled={ableBtnEnviar} 
+                                > {loading ? 'Enviando' : 'Enviar'}
                                 </Button>
-                                
                                 <Button 
                                   variant="outlined" 
                                   onClick={(e) => handleNext(e, etapa)}
@@ -384,7 +415,7 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                                   disabled={etapa.DS_STATUS !== 'SUCESSO'}
                                 > Próximo
                                 </Button>
-                              
+
                               </Box>
                             )}
                           </TabPanel>

@@ -17,6 +17,11 @@ export const SolicitaGeracao = async ( id_simul_etapa, id_empresa, id_usuario, d
 
   return await axios.post(
     '/api/v1/gerar/cat', 
-    formData
+    formData, 
+    {
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`
+      }
+    }
   );
 }
