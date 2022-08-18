@@ -1,13 +1,11 @@
-//import React from "react";
 import React, {useEffect, useState} from "react";
-//import { Typography } from '@mui/material';
 
-import FormEtapa from "components/pages/dashboard/Etapa";
+import MyDashboardChildren from "components/pages/dashboard/DashboardChildren";
 
 import {useEtapas} from "hooks/useEtapas";
 import useAuth from 'hooks/useAuth';
 
-const Etapa = () => {
+const DashboardChildren = () => {
   const { user } = useAuth();
   var [etapas, setEtapas] = useState([]);
 
@@ -20,11 +18,13 @@ const Etapa = () => {
     BuscaEtapa(user);
   }, [user]);
 
-  return (<FormEtapa dataEtapas={etapas} user={user} setEtapas={setEtapas} />);
+  return (
+    <MyDashboardChildren dataEtapas={etapas} user={user}></MyDashboardChildren>
+  );
 };
 
-Etapa.defaultProps = {}
+DashboardChildren.defaultProps = {}
 
-Etapa.propTypes = {}
+DashboardChildren.propTypes = {}
 
-export default Etapa;
+export default DashboardChildren;

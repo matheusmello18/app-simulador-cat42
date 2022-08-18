@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {AppBar, Box, Toolbar, Typography, IconButton, MenuItem, Menu} from '@mui/material'; /*Switch, FormControlLabel, FormGroup, */
 import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, ListSubheader, Avatar} from '@mui/material';
-import {Link as RouterLink, Outlet} from "react-router-dom";
+import {Link as RouterLink, Outlet, useNavigate} from "react-router-dom";
 
 import stringSimilarity from 'string-similarity'
 
@@ -16,6 +16,8 @@ import Logout from '@mui/icons-material/Logout';
 import useAuth from "hooks/useAuth";
 
 export default function BarApp({menuData, user}) {
+
+  const navigate = useNavigate();
 
   function criaIcons(word) {
     const iconsNames = Object.keys(icons)
@@ -46,6 +48,11 @@ export default function BarApp({menuData, user}) {
     setState({ ...state, [anchor]: open });
   };
 
+  const handleUser = () => {
+    setAnchorEl(null);
+    navigate("/dashboard/user")
+  }
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -62,7 +69,7 @@ export default function BarApp({menuData, user}) {
   let Icones;
 
   return (
-    <>
+    <div style={{backgroundColor:'#e3f2fd', overflow: 'auto', height: '100vh'}}>
       <Box sx={{ flexGrow: 1}}>
         <AppBar position="static">
           <Toolbar>
@@ -126,7 +133,7 @@ export default function BarApp({menuData, user}) {
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={handleUser}>
                     <Avatar /> Minha conta
                   </MenuItem>
                   <Divider />
@@ -154,7 +161,7 @@ export default function BarApp({menuData, user}) {
           onClick={toggleDrawer(anchor, false)}
           onKeyDown={toggleDrawer(anchor, false)}
         >
-          <Typography variant="h6" gutterBottom component="div" mt={2} align="center">
+          <Typography variant="h6" gutterBottom component="div" mt={2} ml={2} align="left">
             Menu Prinicpal
           </Typography>
 
@@ -164,8 +171,8 @@ export default function BarApp({menuData, user}) {
             if (!menu.disabled){
               return (
                 <React.Fragment key={index}>
-                  <List dense={true}>
-                    <ListSubheader component="div" inset>
+                  <List component="nav">
+                    <ListSubheader component="h6" inset>
                       {menu.titulo}
                     </ListSubheader>
                     {menu.submenus.map((obj, index2) => {
@@ -174,7 +181,7 @@ export default function BarApp({menuData, user}) {
                         return (
                           <ListItem button key={index2} component={RouterLink} to={obj.to}>
                             <ListItemIcon>
-                              <Icones color="primary" />
+                              <Icones color="default" />
                             </ListItemIcon>
                             <ListItemText primary={obj.text} />
                           </ListItem>
@@ -196,10 +203,10 @@ export default function BarApp({menuData, user}) {
         </Box>
       </Drawer>
         
-      <Box sx={{backgroundColor:'#e3f2fd', minHeight: '1000px'}}>
+      <Box>
         <Outlet />
       </Box>
-    </>
+    </div>
   );
 }
 

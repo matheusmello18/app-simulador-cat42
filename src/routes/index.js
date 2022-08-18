@@ -11,6 +11,8 @@ import Recovery from "routes/recovery";
 import Dashboard from "routes/dashboard";
 import Error404 from "routes/error404";
 import Etapa from "routes/etapa";
+import DashboardChildren from 'routes/dashboardChildren';
+import UserEdit from "routes/userEdit";
 
 const AppRoutes = () => {
   return useRoutes(
@@ -33,8 +35,16 @@ const AppRoutes = () => {
          ),
          children: [
           {
+            path: '',
+            element: <DashboardChildren />
+          },
+          {
               path: '/dashboard/etapa',
               element: <Etapa />
+          },
+          {
+            path: 'user',
+            element: <UserEdit />
           }
         ]
       },

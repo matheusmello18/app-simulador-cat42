@@ -147,7 +147,6 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
     if (row !== null) {
       newEtapas[activeStep] = row;
       setEtapas(newEtapas);
-      document.getElementById('outlined-basic').value = null;
     }
 
   }
@@ -352,6 +351,36 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
                           </TabPanel>
                         </Paper>
 
+                        {etapa.STATUS.length > 0 && (
+                          <TabPanel value={value} index={index}>
+                            <Paper sx={{px: 3, py: 2}}>
+        
+                              <Divider sx={{mb: 3}}>
+                                <Chip label="Status da Importação" />
+                              </Divider>
+                            
+                              <Paper sx={{px: 3, py: 2}} variant="outlined">
+                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                  {etapa.STATUS.map((pStatus, pIndex) => (
+                                    <React.Fragment key={pIndex}>
+                                      <ListItem>
+                                        <ListItemAvatar>
+                                          {etapa.DS_STATUS === 'SUCESSO' ? (<CheckCircleOutlineIcon sx={{color: `success.light`}} />) : 
+                                            etapa.DS_STATUS === 'ERRO'    ? (<HighlightOffIcon sx={{color: `error.light`}} />)         : 
+                                                                              (<ErrorOutlineIcon sx={{color: `warning.light`}} />)}
+                                        </ListItemAvatar>
+                                        <ListItemText primary={pStatus.DS_TAREFA} secondary={"".concat("Data status: ",pStatus.DT_LOG)} />
+                                      </ListItem>
+                                      <Divider variant="inset" component="li" />
+                                    </React.Fragment>
+                                  ))}
+                                </List>
+                              </Paper>
+                            
+                            </Paper>
+                          </TabPanel>
+                        
+                        )}
                       </React.Fragment>
                     )
                   } else {

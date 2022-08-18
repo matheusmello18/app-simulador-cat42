@@ -1,20 +1,20 @@
 {
   "menus": [
     {
-      "titulo": "Dados pessoais",
+      "titulo": "Dashboard",
       "disabled": false,
       "submenus": [
-        {"text":"Home", "icone": "InBoxIcon", "to": "/dashboard", "disabled": false},
-        {"text":"Email", "icone": "MailIcon", "to": "/dashboard/mail" , "disabled": false},
-        {"text":"Usuário", "icone": "AccountTreeIcon", "to": "/dashboard/contato", "disabled": false}
+        {"text":"Home", "icone": "Dashboard", "to": "/dashboard", "disabled": false},
+        {"text":"Email", "icone": "MailIcon", "to": "/dashboard/mail" , "disabled": true},
+        {"text":"Usuário", "icone": "AccountTreeIcon", "to": "/dashboard/contato", "disabled": true}
       ]
     },
     {
-      "titulo": "Importações",
+      "titulo": "Geração",
       "disabled": false,
       "submenus": [
-        {"text":"Etapa", "icone": "InBoxIcon", "to": "/dashboard/etapa", "disabled": false},
-        {"text":"Notas", "icone": "MailIcon", "to": "/dashboard/notas", "disabled": false}
+        {"text":"Cat-42", "icone": "Assessment", "to": "/dashboard/etapa", "disabled": false},
+        {"text":"Notas", "icone": "MailIcon", "to": "/dashboard/notas", "disabled": true}
       ]
     }
   ]
