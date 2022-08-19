@@ -1,11 +1,55 @@
-import { Button, Container, Grid, Paper, TextField, Typography } from '@mui/material';
+import PropTypes from "prop-types";
+import { Button, Chip, Container, Divider, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
+import MaskedInput from 'react-text-mask';
 
 import { userType } from "model";
 
+
 const UserEdit = ({user}) => {
   console.log(user);
+  const [nome, setNome] = React.useState(user.NM_CONTATO);
+  const [empresa, setEmpresa] = React.useState(user.NM_EMPRESA);
+  const [telefone, setTelefone] = React.useState(user.NR_TELEFONE);
+
+  const [senha, setSenha] = React.useState('');
+  const [senhaNova, setSenhaNova] = React.useState('');
+
+  const handleChangeTelefone = (event) => {
+    setTelefone(event.target.value);
+  };
+
+  const handleChangeNome = (event) => {
+    setNome(event.target.value);
+  };
+
+  const handleChangeEmpresa = (event) => {
+    setEmpresa(event.target.value);
+  };
+
+  const handleChangeSenha = (event) => {
+    setSenha(event.target.value);
+  };
+
+  const handleChangeSenhaNova = (event) => {
+    setSenhaNova(event.target.value);
+  };
+
+  const handleSaveDadosUsuario = () => {
+    //const senha = MD5(nm_usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
+    //const senhaWeb = MD5(password).toString();
+    //const response = await axios.post('/api/v1/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
+    var data = {
+      ID_SIMUL_CADASTRO: user.ID_SIMUL_CADASTRO,
+      NM_CONTATO: nome,
+      NM_EMPRESA: empresa,
+      NR_TELEFONE: telefone,
+    };
+
+    console.log(data);
+  }
+
   return (
     <>
       <Box sx={{ display: 'flex'}}>
@@ -18,7 +62,7 @@ const UserEdit = ({user}) => {
 
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} >
             <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-              <Typography component="h1" variant="h4" align="left">
+              <Typography component="h1" variant="h4" align="left" sx={{mb: 4}}>
                 Dados do Usuário
               </Typography>
 
@@ -31,82 +75,90 @@ const UserEdit = ({user}) => {
                     label="Nome do Contato"
                     type="text"
                     fullWidth
-                    autoComplete="given-name"
-                    variant="standard"
+                    value={nome}
+                    defaultValue={nome}
+                    onChange={handleChangeNome}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     required
-                    id="lastName"
-                    name="lastName"
-                    label="Last name"
+                    id="nome_empresa"
+                    name="nome_empresa"
+                    label="Nome da Empresa"
+                    type="text"
                     fullWidth
-                    autoComplete="family-name"
-                    variant="standard"
+                    value={empresa}
+                    defaultValue={empresa}
+                    onChange={handleChangeEmpresa}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
-                    id="address1"
-                    name="address1"
-                    label="Address line 1"
+                    id="cnpj"
+                    name="cnpj"
+                    label="CNPJ"
+                    type="text"
                     fullWidth
-                    autoComplete="shipping address-line1"
-                    variant="standard"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="address2"
-                    name="address2"
-                    label="Address line 2"
-                    fullWidth
-                    autoComplete="shipping address-line2"
-                    variant="standard"
+                    disabled
+                    defaultValue={user.NR_CNPJ}
+                    value={user.NR_CNPJ}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     required
-                    id="city"
-                    name="city"
-                    label="City"
+                    id="email"
+                    name="email"
+                    label="E-mail"
+                    type="email"
                     fullWidth
-                    autoComplete="shipping address-level2"
-                    variant="standard"
+                    value={user.DS_EMAIL}
+                    defaultValue={user.DS_EMAIL}
+                    disabled
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    id="state"
-                    name="state"
-                    label="State/Province/Region"
+                    id="telefone"
+                    name="telefone"
+                    label="Telefone"
+                    value={telefone}
+                    onChange={handleChangeTelefone}
+                    type="text"
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12} mt={2}>
+                  <Divider>
+                    <Chip label="Trocar a senha" />
+                  </Divider>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="senha"
+                    name="senha"
+                    label="Senha Atual"
+                    type="password"
+                    fullWidth
+                    defaultValue={senha}
+                    value={senha}
+                    onChange={handleChangeSenha}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     required
-                    id="zip"
-                    name="zip"
-                    label="Zip / Postal code"
+                    id="nova_senha"
+                    name="nova_senha"
+                    label="Nova Senha"
+                    type="password"
                     fullWidth
-                    autoComplete="shipping postal-code"
-                    variant="standard"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    id="country"
-                    name="country"
-                    label="Country"
-                    fullWidth
-                    autoComplete="shipping country"
-                    variant="standard"
+                    defaultValue={senhaNova}
+                    value={senhaNova}
+                    onChange={handleChangeSenhaNova}
                   />
                 </Grid>
               </Grid>
@@ -114,7 +166,7 @@ const UserEdit = ({user}) => {
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
-                  onClick={() => {}}
+                  onClick={() => {handleSaveDadosUsuario()}}
                   sx={{ mt: 3, ml: 1 }}
                 >
                   Enviar

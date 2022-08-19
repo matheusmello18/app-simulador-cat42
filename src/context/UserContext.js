@@ -155,6 +155,7 @@ export const UserProvider = ({ children }) => {
       try {
         if (checkCookie("email")) {
           const response = await axios.post('/api/v1/user/account', {email : getCookie("email")});
+          console.log(response);
           const { user } = response.data;
           dispatch({
               type: ACCOUNT_INITIALIZE,
