@@ -19,7 +19,7 @@ Dashboard.defaultProps = {
 
 Dashboard.propTypes = {
   menuData: menusType.isRequired,
-  user: userType.isRequired
+  user: userType.isRequired,
 }
 
 export default Dashboard; 

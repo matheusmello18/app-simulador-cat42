@@ -9,7 +9,7 @@ const Dashboard = () => {
   const { user } = useAuth();
 
   return (
-    <MyDashboard menuData={data} user={user}></MyDashboard>
+    <MyDashboard menuData={data} user={user} ></MyDashboard>
   );
 };
 

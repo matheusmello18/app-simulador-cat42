@@ -57,7 +57,8 @@ const UserContext = createContext({
   recovery: () => Promise.resolve(),
   forgotPassword: () => Promise.resolve(),
   buscarPorHash: () => Promise.resolver(),
-  logout: () => {}
+  logout: () => {},
+  account: () => Promise.resolve(),
 });
 
 export const LOGIN = 'LOGIN';
@@ -150,20 +151,24 @@ export const UserProvider = ({ children }) => {
     dispatch({ type: LOGOUT });
   };
 
+  const account = async (email) => {
+    const response = await axios.post('/api/v1/user/account', {email : email});
+    const { user } = response.data;
+    console.log(user);
+    dispatch({
+        type: ACCOUNT_INITIALIZE,
+        payload: {
+            isLoggedIn: true,
+            user
+        }
+    });
+    return user;
+  }
   useEffect(() => {
     const init = async () => {
       try {
         if (checkCookie("email")) {
-          const response = await axios.post('/api/v1/user/account', {email : getCookie("email")});
-          console.log(response);
-          const { user } = response.data;
-          dispatch({
-              type: ACCOUNT_INITIALIZE,
-              payload: {
-                  isLoggedIn: true,
-                  user
-              }
-          });
+          account(getCookie("email"));
         } else {
           dispatch({
               type: ACCOUNT_INITIALIZE,
@@ -174,7 +179,6 @@ export const UserProvider = ({ children }) => {
           });
         }
       } catch (err) {
-        console.error(err);
         dispatch({
             type: ACCOUNT_INITIALIZE,
             payload: {
@@ -192,7 +196,7 @@ export const UserProvider = ({ children }) => {
     return <Loader />;
   }
 
-  return <UserContext.Provider value={{ ...state, login, logout, forgotPassword, recovery, buscarPorHash }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ ...state, login, logout, forgotPassword, recovery, buscarPorHash, account }}>{children}</UserContext.Provider>;
 
 };
 

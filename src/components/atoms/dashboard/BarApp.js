@@ -84,7 +84,7 @@ export default function BarApp({menuData, user}) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {user.NM_COMPLETO}
+              {user.NM_CONTATO}
             </Typography>
             
               <div>

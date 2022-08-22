@@ -1,19 +1,36 @@
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { Button, Chip, Container, Divider, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
-import MaskedInput from 'react-text-mask';
+import MD5 from "crypto-js/md5";
+import axios from 'utils/axios';
+import {Stack, Snackbar} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 import { userType } from "model";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const UserEdit = ({user}) => {
-  console.log(user);
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [msgAlert, setmsgAlert] = React.useState('');
+  const [severidadeAlert, setseveridadegAlert] = React.useState('');
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
+
   const [nome, setNome] = React.useState(user.NM_CONTATO);
   const [empresa, setEmpresa] = React.useState(user.NM_EMPRESA);
   const [telefone, setTelefone] = React.useState(user.NR_TELEFONE);
 
-  const [senha, setSenha] = React.useState('');
+  const [senhaAtual, setSenhaAtual] = React.useState('');
   const [senhaNova, setSenhaNova] = React.useState('');
 
   const handleChangeTelefone = (event) => {
@@ -28,26 +45,58 @@ const UserEdit = ({user}) => {
     setEmpresa(event.target.value);
   };
 
-  const handleChangeSenha = (event) => {
-    setSenha(event.target.value);
+  const handleChangeSenhaAtual = (event) => {
+    setSenhaAtual(event.target.value);
   };
 
   const handleChangeSenhaNova = (event) => {
     setSenhaNova(event.target.value);
   };
 
-  const handleSaveDadosUsuario = () => {
-    //const senha = MD5(nm_usuario.toUpperCase() + password).toString().slice(0, 10).toLowerCase();
-    //const senhaWeb = MD5(password).toString();
-    //const response = await axios.post('/api/v1/user/recovery', {id: id, email: email, senhaWeb: senhaWeb, senha: senha });
+  const handleSaveDadosUsuario = async () => {
+    if (senhaAtual === senhaNova){
+      setmsgAlert('Senha atual é igual a senha nova. Por favor, modifique a senha nova.');
+      setseveridadegAlert('error');
+      setOpenAlert(true);
+      return;
+    }
+
+    let calcSenhaSistema = ''
+    let calcSenhaWeb = ''
+    let calcSenhaWebAtual = ''
+
+    if (senhaAtual.length > 0 && senhaNova.length > 0){
+      calcSenhaSistema = MD5(user.NM_USUARIO.toUpperCase() + senhaNova).toString().slice(0, 10).toLowerCase();
+      calcSenhaWeb = MD5(senhaNova).toString();
+      calcSenhaWebAtual = MD5(senhaAtual).toString();
+    }
+
     var data = {
+      ID_USUARIO: user.ID_USUARIO,
+      E_MAIL: user.E_MAIL,
+      NM_USUARIO: user.NM_USUARIO,
       ID_SIMUL_CADASTRO: user.ID_SIMUL_CADASTRO,
       NM_CONTATO: nome,
       NM_EMPRESA: empresa,
       NR_TELEFONE: telefone,
+      senhaSistema: calcSenhaSistema,
+      senhaWeb: calcSenhaWeb, 
+      senhaWebAtual: calcSenhaWebAtual
     };
 
-    console.log(data);
+    const response = await axios.post('/api/v1/cliente/edit', data);
+    if (response.data.success === 'true'){
+      setmsgAlert('Dados alterado com sucesso!');
+      setseveridadegAlert('success');
+      setSenhaNova('');
+      setSenhaAtual('');
+      user = response.data.user;
+    }else{
+      setmsgAlert(response.data.message);
+      setseveridadegAlert('error');
+    }
+
+    setOpenAlert(true);
   }
 
   return (
@@ -143,9 +192,8 @@ const UserEdit = ({user}) => {
                     label="Senha Atual"
                     type="password"
                     fullWidth
-                    defaultValue={senha}
-                    value={senha}
-                    onChange={handleChangeSenha}
+                    value={senhaAtual}
+                    onChange={handleChangeSenhaAtual}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -156,7 +204,6 @@ const UserEdit = ({user}) => {
                     label="Nova Senha"
                     type="password"
                     fullWidth
-                    defaultValue={senhaNova}
                     value={senhaNova}
                     onChange={handleChangeSenhaNova}
                   />
@@ -177,6 +224,14 @@ const UserEdit = ({user}) => {
           </Container>
         </Box>
       </Box>
+
+      <Stack spacing={2} sx={{ width: '100%' }}>
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }} open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
+          <Alert onClose={handleCloseAlert} severity={severidadeAlert} sx={{ width: '100%' }}>
+            {msgAlert}
+          </Alert>
+        </Snackbar>
+      </Stack>
     </>
   );
 };
