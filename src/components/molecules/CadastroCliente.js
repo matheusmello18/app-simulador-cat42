@@ -2,10 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import MaskedInput from 'react-text-mask';
 import {Typography, Box, TextField } from '@material-ui/core';
-import Axios from "axios";
+import axios from 'utils/axios';
+
+import {Stack, Snackbar} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 import {Section, Button} from "components";
 import { sectionType } from "model";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function TextMaskCNPJ(props) {
   const { inputRef, ...other } = props;
@@ -47,6 +54,20 @@ TextMaskTelefone.propTypes = {
 };
 
 const CadastroCliente = (props) => {
+  const [alert, setAlert] = React.useState({
+    open: false,
+    message: '',
+    severidade: 'success'
+  });
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlert({...alert, open: false});
+  };
+  
   const { sectionData } = props;
 
   const [values, setValues] = React.useState({});
@@ -72,7 +93,7 @@ const CadastroCliente = (props) => {
 
   const handleClick = (event) => {
     if (validate()){
-      Axios.post('http://192.168.1.188:8081/api/v1/cliente/add', { // trocar pelo ip externo ou nome do site
+      axios.post('/api/v1/cliente/add', { // trocar pelo ip externo ou nome do site
       //Axios.post('https://matilab.com.br/api/v1/cliente/index.php', {
         nome_contato: values.nome_contato,
         nome_empresa: values.nome_empresa,
@@ -81,18 +102,20 @@ const CadastroCliente = (props) => {
         cnpj: values.cnpj
       })
       .then(function (response) {
+        setAlert({...alert, open: true, message: response.data.message});
+
+        const newValue = sectionData.cadastrarData.inputs.map((input) => {
+          return values[input.field] = '';
+        })
+        setValues({ ...newValue })
+        setErros({...newValue});
         console.log(response);
-        alert("Obrigado em breve entraremos em contato");
-        //setValues({ ...{}});
       })
       .catch(function (error) {
-        console.log('matheus');
+        setAlert({...alert, open: true, message: error.data.message, severidade: 'error'});
         console.log(error);
-        alert("Falha na transmissão");
       });
-
-      
-    }
+    } 
     
     //validar - feito
     // enviar
@@ -131,7 +154,6 @@ const CadastroCliente = (props) => {
                 inputComponent: (input.mask === "tel" ? TextMaskTelefone : (input.mask === "cnpj" ? TextMaskCNPJ : "input"))
               }}
               label={input.label}
-              defaultValue={values[input.field]}              
               variant="outlined"
               fullWidth
               style={{marginBottom:"16px"}}
@@ -142,6 +164,14 @@ const CadastroCliente = (props) => {
       })}
 
       </form>
+
+      <Stack spacing={2} sx={{ width: '100%' }}>
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }} open={alert.open} autoHideDuration={8000} onClose={handleCloseAlert}>
+          <Alert onClose={handleCloseAlert} severity={alert.severidade} sx={{ width: '100%' }}>
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      </Stack>
     </Section>
   );
 };
