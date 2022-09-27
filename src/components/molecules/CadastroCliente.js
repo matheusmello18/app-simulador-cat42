@@ -104,9 +104,11 @@ const CadastroCliente = (props) => {
       .then(function (response) {
         setAlert({...alert, open: true, message: response.data.message});
 
-        const newValue = sectionData.cadastrarData.inputs.map((input) => {
-          return values[input.field] = '';
+        const newValue = {}
+        sectionData.cadastrarData.inputs.forEach((input) => {
+          return newValue[input.field] = '';
         })
+        
         setValues({ ...newValue })
         setErros({...newValue});
         console.log(response);
