@@ -168,7 +168,10 @@ const Etapa = ({dataEtapas, user, setEtapas}) => {
     if (success === 'false'){
       setOpenModal(true);
       setTituloModal("Falha no processamento.");
-      setSubtituloModal(message);
+      if (message.name !== undefined)
+        setSubtituloModal(message.message);
+      else
+        setSubtituloModal(message);
     } else {
       setOpenModal(true);
       setTituloModal("Processamento.");
